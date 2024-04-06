@@ -1,3 +1,2 @@
 # MGP_EA
-OI AMIGOOOOO
-ooooiiiii
+OI
