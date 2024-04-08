@@ -1,1 +1,1 @@
-# Chamar todos os arquivos edcdd
+# Chamar todos os arquivos
