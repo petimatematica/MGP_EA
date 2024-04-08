@@ -1,22 +1,29 @@
 using LinearAlgebra
 
-function f(x)
-    return (x[1] - 1)^2 + 2 * (2 * x[2]^2 - x[1])^2
+x = [1,2,3,4,5]
+n=length(x)
+
+function f(x) 
+
+    return (x[1]-1)^2 + sum(i*((2x[i]^2-x[i-1]))^2 for i in 2:n)
+
 end
 
 function gradf(x)
-    df_dx = 6*x[1] - 8*x[2]^2 - 2
-    df_dy = 32*x[2]^3 - 16*x[1]*x[2]
-    return [df_dx, df_dy]
+    
+    gradf_x1 = 2x[1]-2
+    gradf_xi = [8i*x[i]*(2x[i]^2-x[i-1])-(2i-2)*(2x[i+1]^2-x[i]) for i in 2:(n-1)]
+    gradf_xn = 8n*x[n]*(2x[n]^2-x[n-1])
+    return vcat(gradf_x1, gradf_xi, gradf_xn)
+    
 end
 
-function projf(x)
-    return [x[1],x[2]]-(dot([x[1],x[2]], [-1/sqrt(2),1]))/(3/2)*[-1/sqrt(2),1]
-end
+global_minimum = [2^(-(2^i-2)/2^i) for i in 1:n]
 
-x = [1; 1/sqrt(2)]
+
+
+
 
 println("f(x) = ", f(x))
-println("gradf(x) = ", gradf(x))
-println("projf(x) = ", projf(x))
-println("produtoint = ", dot([-1/sqrt(2),1], projf(x)))
+println("gradf(x) =", gradf(x))
+println("Global Minimum of f(x) = ", global_minimum)
