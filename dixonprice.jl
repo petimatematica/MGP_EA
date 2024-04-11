@@ -1,6 +1,6 @@
 using LinearAlgebra
 
-x = [1,2,3,4,5]
+x = [1,2]
 n=length(x)
 
 function f(x) 
@@ -19,7 +19,7 @@ function gradf(x)
 end
 
 global_minimum = [2^(-(2^i-2)/2^i) for i in 1:n]
-
+val_minimun = f(global_minimum)
 
 
 
@@ -27,3 +27,4 @@ global_minimum = [2^(-(2^i-2)/2^i) for i in 1:n]
 println("f(x) = ", f(x))
 println("gradf(x) =", gradf(x))
 println("Global Minimum of f(x) = ", global_minimum)
+println("Valor mínimo de f = ", val_minimun)
