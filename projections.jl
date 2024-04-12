@@ -16,10 +16,10 @@ function projection(x)
 end
 
 # Parâmetros de projeção
-x = [5,10,13]
+x = [5,10]
 δ = 2.0
-y = [0,1,2]
+y = [0,1]
 
-println("Projeção de x em C: ", projection(x, y, δ))
+# println("Projeção de x em C: ", projection(x))
 
 ## O CONJUNTO C É UMA BOLA DE RAIO δ E CENTRO y ##
