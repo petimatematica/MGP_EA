@@ -1,5 +1,5 @@
 #
-# Método do Gradiente com Armijo
+# Gradient Project Method
 #
 
 using LinearAlgebra, DataFrames
@@ -9,8 +9,7 @@ function gradiente_armijo(f, ∇f, x0, max_step, η)
     # Parâmetros de controle
     ϵ = 1e-6 # Critério de parada para a norma do gradiente
     max_iter = 1000 # Número máximo de iteradas
-    σ = 0.5
-
+    η =0.5
 
     # Listas para armazenar os resultados
     fvals = Float64[]
@@ -28,18 +27,17 @@ function gradiente_armijo(f, ∇f, x0, max_step, η)
         gradnorm = norm(∇fx) # Calcula a norma do gradiente no ponto atual
         
         # Verifica o critério de parada
-        proj_x = projection(x - ∇fx) # Calcula a projeção do ponto atual menos o passo
-        if norm(proj_x) < ϵ || iter >= max_iter
+        if norm(∇fx) < ϵ || iter >= max_iter
             break
         end
 
         push!(fvals, fx) # Armazena o valor da função na lista fvals
         push!(gradnorms, gradnorm) # Armazena o valor do gradiente da função na lista gradnorms
         
-        # Busca de Armijo GPA2
-        β = max_step
-        while f(x - β * ∇fx) > f(x) - η * β * dot(∇fx, ∇fx) || α < minstep
-            β *= 0.5
+        # Busca de Armijo
+        α = max_step
+        while f(x - α * ∇fx) > f(x) - η * α * dot(∇fx, ∇fx) || α < minstep
+            α *= 0.5
         end
 
         push!(stepsizes, α) # Armazena o comprimento de passo na lista stepsizes
@@ -56,7 +54,7 @@ function gradiente_armijo(f, ∇f, x0, max_step, η)
     return x, f(x), info
 end
 
-# Definição da função teste
+# # Definição da função teste
 function teste_funcao(x)
     return (x[1] - 1)^2 + 2 * (2 * x[2]^2 - x[1])^2
 end
@@ -67,9 +65,10 @@ function grad_teste_funcao(x)
 end
 
 # Chamada da função gradiente_armijo com a função teste
-x0 = [5; 1]  # Ponto inicial
+
+x0 = [1; 3]  # Ponto inicial
 max_step = 1.0    # Tamanho máximo do passo
-σ = 0.5           # Parâmetro de Armijo
+η = 0.5           # Parâmetro de Armijo
 minstep = 1e-4
 resultado = gradiente_armijo(teste_funcao, grad_teste_funcao, x0, max_step, η)
 
