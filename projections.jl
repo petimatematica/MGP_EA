@@ -2,8 +2,6 @@
 # Funções de projeções para diferentes conjuntos
 #
 
-using LinearAlgebra
-
 ## O CONJUNTO C É UMA BOLA DE RAIO δ E CENTRO y ##
 
 function projection(x)
@@ -15,11 +13,6 @@ function projection(x)
     end
 end
 
-# Parâmetros de projeção
-x = [5,10]
-δ = 2.0
-y = [0,1]
-
-# println("Projeção de x em C: ", projection(x))
+#println("Projeção de x em C: ", projection(x))
 
 ## O CONJUNTO C É UMA BOLA DE RAIO δ E CENTRO y ##
