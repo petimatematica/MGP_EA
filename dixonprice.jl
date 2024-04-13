@@ -1,4 +1,4 @@
-using LinearAlgebra
+# Dixon-Price com dimensão n
 
 x = [1,2]
 n=length(x)
