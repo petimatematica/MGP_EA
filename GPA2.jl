@@ -1,6 +1,4 @@
 # Busca de Armijo ao longo da fronteira
-include("projections.jl")
-include("dixonpricedim2.jl")
 
 function GPA2(x, f, ∇f, projection, σ, imax_iter, β_inicial)
    
@@ -25,6 +23,6 @@ function GPA2(x, f, ∇f, projection, σ, imax_iter, β_inicial)
    println("Número máximo de iteradas atingido.")
 end
 
-newstep = GPA2(x, f, ∇f, projection, σ, imax_iter, β_inicial)
-#println("β = ", newstep)
+# newstep = GPA2(x, f, ∇f, projection, σ, imax_iter, β_inicial)
+# println("β = ", newstep)
 
