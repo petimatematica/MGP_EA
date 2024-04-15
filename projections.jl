@@ -2,7 +2,7 @@
 # Funções de projeções para diferentes conjuntos
 #
 
-## O CONJUNTO C É UMA BOLA DE RAIO δ E CENTRO y ##
+# ## O CONJUNTO C É UMA BOLA DE RAIO δ E CENTRO y ##
 
 function projection(x)
     norm_yx = norm(y-x)
@@ -13,6 +13,4 @@ function projection(x)
     end
 end
 
-#println("Projeção de x em C: ", projection(x))
-
-## O CONJUNTO C É UMA BOLA DE RAIO δ E CENTRO y ##
+println("Projeção de x em C: ", projection(x))
