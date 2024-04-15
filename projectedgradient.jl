@@ -1,6 +1,7 @@
 #
 # Método do Gradiente Projetado
 #
+x = [1,2,3]
 
 function gradienteproj(f, ∇f, x0, ε, max_iter, GPA2)
 
@@ -15,7 +16,7 @@ function gradienteproj(f, ∇f, x0, ε, max_iter, GPA2)
     
     while true
 
-        ∇fx = ∇f(x) # Calcula o gradiente no ponto atual
+        ∇fx = gradf(x) # Calcula o gradiente no ponto atual
         fx = f(x) # Calcula o valor da função no ponto atual
         gradnorm = norm(∇fx) # Calcula a norma do gradiente no ponto atual
         
@@ -32,14 +33,11 @@ function gradienteproj(f, ∇f, x0, ε, max_iter, GPA2)
         iter += 1
 
         # Atualiza o comprimento de passo
-        newstep = GPA2(x, f, ∇f, projection, σ, imax_iter, β_inicial)
+        
 
         # Atualização do ponto
-
-        # z = projection(x - β * ∇fx) # GPA1
-        # x += γ * (z - x) # GPA1
-
         x = projection(x - newstep * ∇fx) # GPA2
+        newstep = GPA2(x, f, ∇f, projection, σ, imax_iter, β_inicial)
         push!(stepsizes, newstep) # Armazena o comprimento de passo na lista stepsizes
 
     end
@@ -48,9 +46,4 @@ function gradienteproj(f, ∇f, x0, ε, max_iter, GPA2)
     
     return x, f(x), info
 end
-
-# # Exibir o resultado
-# println(resultado[3])
-# println("Ponto de mínimo: ", resultado[1])
-# println("Valor mínimo da função: ", resultado[2])
 
