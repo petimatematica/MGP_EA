@@ -9,8 +9,9 @@ function projection(x)
     if norm_yx <= δ
         return x
     else
-        return y + δ*(y-x) / norm_yx
+        projection = y + δ*(y-x) / norm_yx
+        return projection
     end
 end
 
-println("Projeção de x em C: ", projection(x))
+# println("Projeção de x em C: ", projection(x))
