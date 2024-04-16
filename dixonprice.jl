@@ -1,12 +1,5 @@
 # Dixon-Price com dimensão n
 
-#x = [1,2,5,6]
-# n = length(x)
-# y = [1,0,0,0]
-# δ = 3.0
-
-#x = x0
-
 function f(x::Vector) # x is a vector of real coordinates
     n = length(x) # Vector dimension
     sum = (x[1] - 1)^2 # First part of the function 
@@ -16,7 +9,7 @@ function f(x::Vector) # x is a vector of real coordinates
     return sum # Sum of the first part with the second part
 end
 
-function gradf(x::Vector) # x is a vector of real coordinates
+function ∇f(x::Vector) # x is a vector of real coordinates
     n = length(x)   # Vector dimension
     g = zeros(n)    # Creates a vector of n coordinates initialized to 0
     g[1] = 2 * (x[1] - 1) - 4 * (2 * x[2]^2 - x[1])  # Update the first coordinate of the vector with this result
@@ -31,6 +24,6 @@ end
 # val_minimun = f(global_minimum)
 
 # println("f(x) = ", f(x))
-# println("gradf(x) =", gradf(x))
+# println("∇f(x) =", ∇f(x))
 # println("Global Minimum of f(x) = ", global_minimum)
 # println("Valor mínimo de f = ", val_minimun)
