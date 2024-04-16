@@ -1,9 +1,9 @@
 #
 # Método do Gradiente Projetado
 #
-x = [1,2,3]
+x = x0
 
-function gradienteproj(f, ∇f, x0, ε, max_iter, GPA2)
+function gradienteproj(f, ∇f, x, ε, max_iter, GPA2)
 
     # Listas para armazenar os resultados
     fvals = Float64[]
@@ -11,12 +11,15 @@ function gradienteproj(f, ∇f, x0, ε, max_iter, GPA2)
     stepsizes = Float64[]
     
     # Inicialização
-    x = x0
+    # x = x0
     iter = 0
+    # push!(stepsizes, NaN)
+    # push!(fvals, f(x))
+    # push!(gradnorms, ∇f(x))
     
     while true
 
-        ∇fx = gradf(x) # Calcula o gradiente no ponto atual
+        ∇fx = ∇f(x) # Calcula o gradiente no ponto atual
         fx = f(x) # Calcula o valor da função no ponto atual
         gradnorm = norm(∇fx) # Calcula a norma do gradiente no ponto atual
         
@@ -33,17 +36,16 @@ function gradienteproj(f, ∇f, x0, ε, max_iter, GPA2)
         iter += 1
 
         # Atualiza o comprimento de passo
-        
+        β = GPA2(x, f, ∇f, projection, σ, imax_iter, β_inicial)
 
         # Atualização do ponto
-        x = projection(x - newstep * ∇fx) # GPA2
-        newstep = GPA2(x, f, ∇f, projection, σ, imax_iter, β_inicial)
-        push!(stepsizes, newstep) # Armazena o comprimento de passo na lista stepsizes
+        x = projection(x - β * ∇fx) # GPA2
+        push!(stepsizes, β) # Armazena o comprimento de passo na lista stepsizes
 
     end
 
-    info = DataFrame(fvals=fvals, gradnorms=gradnorms, stepsizes=stepsizes)
+    info = DataFrame(fvals = fvals, gradnorms = gradnorms, stepsizes = stepsizes)
     
-    return x, f(x), info
+    return (x, f(x), info)
 end
 
