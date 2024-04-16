@@ -9,10 +9,10 @@ using LinearAlgebra, DataFrames
 
 # Definição dos Parâmetros
 
-x = [1,2,5] # Ponto inicial
+x = [1,2] # Ponto inicial
 n = length(x) # Dimensão da Função Dixon-Price
-y = [1,0,0] # Centro do conjunto viável (Bola)
-δ = 3.0 # Raio da Bola
+y = [1,0] # Centro do conjunto viável (Bola)
+δ = 5.0 # Raio da Bola
 σ = 1.e-4 # Parâmetro da Busca de Armijo
 ε = 1.e-5 # Critério de parada do Método
 β_inicial = 1.0 # Comprimento de passo inicial
@@ -23,6 +23,7 @@ imax_iter = 100 # Máximo de iteradas da estratégia
 resultado = gradienteproj(f, ∇f, x, ε, max_iter, GPA2)
 
 # Exibir o resultado
+ENV["LINES"] = 1000
 println(resultado[3])
 println("Ponto de mínimo: ", resultado[1])
 println("Valor mínimo da função: ", resultado[2])
