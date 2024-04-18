@@ -9,18 +9,33 @@ using LinearAlgebra, DataFrames
 
 # Definição dos Parâmetros
 
-x = [1,2] # Ponto inicial
+x = [1, 1.9] # Ponto inicial
 n = length(x) # Dimensão da Função Dixon-Price
-y = [1,0] # Centro do conjunto viável (Bola)
-δ = 5.0 # Raio da Bola
+y = [1, 1] # Centro do conjunto viável (Bola)
+δ = 1.0 # Raio da Bola
 σ = 1.e-4 # Parâmetro da Busca de Armijo
 ε = 1.e-5 # Critério de parada do Método
 β_inicial = 1.0 # Comprimento de passo inicial
-max_iter = 10000 # Máximo de iteradas do Método
+β1 = 1.e-6
+β2 = 1.0
+min_step = 1.e-6
+max_iter = 1000 # Máximo de iteradas do Método
 imax_iter = 100 # Máximo de iteradas da estratégia
 
 # Chamada da função gradientproj
-resultado = gradienteproj(f, ∇f, x, ε, max_iter, GPA2)
+function select_strategy(strategy)
+    if strategy == "GPA1"
+        return GPA1
+    elseif strategy == "GPA2"
+        return GPA2
+    elseif strategy == "GPA3"
+        return GPA3
+    end
+end
+
+strategy = "GPA2"
+strategy = select_strategy(strategy)
+resultado = gradienteproj(f, ∇f, x0, ε, max_iter, strategy)
 
 # Exibir o resultado
 ENV["LINES"] = 1000
