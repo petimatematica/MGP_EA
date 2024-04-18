@@ -3,7 +3,7 @@
 #
 x = x0
 
-function gradienteproj(f, ∇f, x, ε, max_iter, GPA2)
+function gradienteproj(f, ∇f, x, ε, max_iter, select_strategy)
 
     # Listas para armazenar os resultados
     fvals = Float64[]
@@ -35,13 +35,16 @@ function gradienteproj(f, ∇f, x, ε, max_iter, GPA2)
         # Atualiza o contador de iterações
         iter += 1
 
-        # Atualiza o comprimento de passo
-        β = GPA2(x, f, ∇f, projection, σ, imax_iter, β_inicial)
-
-        # Atualização do ponto
-        x = projection(x - β * ∇fx) # GPA2
-        push!(stepsizes, β) # Armazena o comprimento de passo na lista stepsizes
-
+        # GPA1
+            newsteps = GPA1(x, f, ∇f, projection, σ, imax_iter, γ_inicial) # GPA1
+            z = projection(x - newsteps[2]  * ∇f(x)) # GPA1
+            x = x + newsteps[1] * (z - x) # GPA1
+            push!(stepsizes, newsteps[1])
+        
+        # GPA2
+            # β = GPA2(x, f, ∇f, projection, σ, imax_iter, β_inicial)  # GPA2
+            # x = projection(x - β * ∇fx) # GPA2
+            # push!(stepsizes, β) # Armazena o comprimento de passo na lista stepsizes
     end
 
     info = DataFrame(fvals = fvals, gradnorms = gradnorms, stepsizes = stepsizes)
