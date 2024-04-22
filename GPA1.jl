@@ -9,8 +9,8 @@ function GPA1(x, f, ∇f, projection, σ, imax_iter, γ_inicial)
     println(z_k - x)
  
     while j < imax_iter 
-     stptest = f(x + 2.0^(-j) * (x - z_k)) - f(x) - σ * 2.0^(-j) * dot(∇f(x), x - z_k) # Testa Armijo para o z_k obtido
-     println("É direção de descida? --->", " ", dot(∇f(x), x - z_k)) 
+     stptest = f(x + 2.0^(-j) * (z_k - x)) - f(x) - σ * 2.0^(-j) * dot(∇f(x), z_k - x) # Testa Armijo para o z_k obtido
+     #println("É direção de descida? --->", " ", dot(∇f(x), z_k -x)) 
      println(j, " ", stptest)
  
        if stptest > 0.0 # Se a condição de Armijo não for satisfeita, testa o próximo j   
