@@ -1,9 +1,9 @@
 #
 # Método do Gradiente Projetado
 #
-x = x0
+#x = x0
 
-function gradienteproj(f, ∇f, x, ε, max_iter, select_strategy)
+function gradienteproj(f, ∇f, x, ε, max_iter, strategy)
 
     # Listas para armazenar os resultados
     fvals = Float64[]
@@ -11,11 +11,8 @@ function gradienteproj(f, ∇f, x, ε, max_iter, select_strategy)
     stepsizes = Float64[]
     
     # Inicialização
-    # x = x0
     iter = 0
-    # push!(stepsizes, NaN)
-    # push!(fvals, f(x))
-    # push!(gradnorms, ∇f(x))
+    x = x0
     
     while true
 
@@ -35,16 +32,18 @@ function gradienteproj(f, ∇f, x, ε, max_iter, select_strategy)
         # Atualiza o contador de iterações
         iter += 1
 
+        if strategy == "GPA1"
         # GPA1
             newsteps = GPA1(x, f, ∇f, projection, σ, imax_iter, γ_inicial) # GPA1
             z = projection(x - newsteps[2]  * ∇f(x)) # GPA1
             x = x + newsteps[1] * (z - x) # GPA1
-            push!(stepsizes, newsteps[1])
-        
+            push!(stepsizes, newsteps[1])   
+        else
         # GPA2
-            # β = GPA2(x, f, ∇f, projection, σ, imax_iter, β_inicial)  # GPA2
-            # x = projection(x - β * ∇fx) # GPA2
-            # push!(stepsizes, β) # Armazena o comprimento de passo na lista stepsizes
+            β = GPA2(x, f, ∇f, projection, σ, imax_iter, β_inicial)  # GPA2
+            x = projection(x - β * ∇fx) # GPA2
+            push!(stepsizes, β) # Armazena o comprimento de passo na lista stepsizes     
+        end    
     end
 
     info = DataFrame(fvals = fvals, gradnorms = gradnorms, stepsizes = stepsizes)
