@@ -2,7 +2,7 @@
 
 include("dixonprice.jl")
 include("projections.jl")
-#include("GPA1.jl")
+include("GPA1.jl")
 include("GPA2.jl")
 include("projectedgradient.jl")
 
