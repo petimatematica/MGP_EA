@@ -21,7 +21,7 @@ y = [1, 1] # Centro do conjunto viável (Bola)
 β2 = 1.0
 γ_inicial = 1.0
 min_step = 1.e-6
-max_iter = 1000 # Máximo de iteradas do Método
+max_iter = 500 # Máximo de iteradas do Método
 imax_iter = 50 # Máximo de iteradas da estratégia
 
 strategy = "GPA1"
