@@ -2,9 +2,9 @@
 
 include("dixonprice.jl")
 include("projections.jl")
-include("GPA1.jl")
-include("GPA2.jl")
 include("projectedgradient.jl")
+include("method1.jl")
+include("method2.jl")
 
 using LinearAlgebra, DataFrames
 
@@ -23,9 +23,15 @@ y = [1, 1] # Centro do conjunto viável (Bola)
 min_step = 1.e-6
 max_iter = 500 # Máximo de iteradas do Método
 imax_iter = 50 # Máximo de iteradas da estratégia
-strategy = "GPA2"
+strategy = "GPA1"
 
-resultado = gradienteproj(f, ∇f, x0, ε, max_iter, strategy)
+if strategy == "GPA1"
+   resultado = method1(f, ∇f, x0, ε, max_iter, GPA1) 
+   else
+   resultado = method2(f, ∇f, x0, ε, max_iter, GPA2) 
+end
+
+#resultado = gradienteproj(f, ∇f, x0, ε, max_iter, strategy)
 
 # Exibir o resultado
 ENV["LINES"] = 1000
