@@ -31,7 +31,7 @@ function GPA1(x, f, ∇f, projection, σ, imax_iter, γ_inicial, β_inicial)
     println("β = ",β)
     if β < β1 || β > β2
        β = β / 2.0
-       println("β = ", " ", β)
+       #println("β = ", " ", β)
     end
     return (γ, β)
  
