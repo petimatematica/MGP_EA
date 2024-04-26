@@ -15,3 +15,6 @@ function projection(x)
 end
 
 # println("Projeção de x em C: ", projection(x))
+
+k = [2,3]
+println(projection(k))
