@@ -23,7 +23,7 @@ y = [1, 1] # Centro do conjunto viável (Bola)
 min_step = 1.e-6
 max_iter = 500 # Máximo de iteradas do Método
 imax_iter = 50 # Máximo de iteradas da estratégia
-strategy = "GPA1"
+strategy = "GPA2"
 
 resultado = gradienteproj(f, ∇f, x0, ε, max_iter, strategy)
 
