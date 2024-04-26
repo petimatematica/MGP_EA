@@ -23,8 +23,8 @@ y = [1, 1] # Centro do conjunto viável (Bola)
 min_step = 1.e-6
 max_iter = 500 # Máximo de iteradas do Método
 imax_iter = 50 # Máximo de iteradas da estratégia
-
 strategy = "GPA1"
+
 resultado = gradienteproj(f, ∇f, x0, ε, max_iter, strategy)
 
 # Exibir o resultado
@@ -32,3 +32,4 @@ ENV["LINES"] = 1000
 println(resultado[3])
 println("Ponto de mínimo: ", resultado[1])
 println("Valor mínimo da função: ", resultado[2])
+
