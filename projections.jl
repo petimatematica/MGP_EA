@@ -9,12 +9,13 @@ function projection(x)
     if norm_yx <= δ
         return x
     else
-        projection = y + δ*(y-x) / norm_yx
+        projection = y - (δ*(y-x)/norm_yx)
         return projection
     end
 end
 
 # println("Projeção de x em C: ", projection(x))
-
-k = [2,3]
-println(projection(k))
+# δ = 1.0
+# y = [1,1]
+# k = [0,2]
+# println(projection(k))
