@@ -20,7 +20,7 @@ function ∇f(x::Vector) # x is a vector of real coordinates
     return g
 end
 
-# global_minimum = [2^(-(2^i-2)/2^i) for i in 1:n]
+global_minimum = [2^(-(2^i-2)/2^i) for i in 1:n];
 # val_minimun = f(global_minimum)
 
 # println("f(x) = ", f(x))
