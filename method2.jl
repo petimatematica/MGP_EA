@@ -43,7 +43,7 @@ function GPA2(x, f, ∇f, projection, σ, min_step, β_inicial)
     end
     
     while true
-        x_k = similar(x)
+        x_k = copy(x)
         it0 = time()
         ∇fx = ∇f(x) 
         fx = f(x)
