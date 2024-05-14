@@ -48,8 +48,7 @@ function method1(f, ∇f, ε, max_iter, GPA1)
     end
     
     while true
-        x_k = similar(x)
-        #push!(seqx, x_k)
+        x_k = copy(x)
         it0 = time()
         ∇fx = ∇f(x)
         fx = f(x) 
