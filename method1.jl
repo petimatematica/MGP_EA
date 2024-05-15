@@ -49,6 +49,7 @@ function method1(f, ∇f, ε, max_iter, GPA1)
     
     while true
         x_k = copy(x)
+        #push!(seqx, x_k)
         it0 = time()
         ∇fx = ∇f(x)
         fx = f(x) 
