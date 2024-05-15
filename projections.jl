@@ -7,7 +7,7 @@ using LinearAlgebra
 ## PROJECTION 01: O CONJUNTO C É UMA BOLA DE RAIO δ E CENTRO y ##
 
 function projection1(x)
-    y = fill(0, n) # Centro do conjunto viável (Bola)
+    y = fill(1, n) # Centro do conjunto viável (Bola)
     δ = 1.0 # Raio da Bola
     norm_yx = norm(y-x)
     if norm_yx <= δ
