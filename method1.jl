@@ -28,7 +28,7 @@ function GPA1(x, f, ∇f, projection, σ, min_step, γ_inicial, β_inicial)
     println("Step length too small!")
 end
 
-function method1(f, ∇f, ε, max_iter, GPA1)
+function method1(x0, f, ∇f, ε, max_iter, GPA1)
 
     fvals = Float64[]
     gradnorms = Float64[]
