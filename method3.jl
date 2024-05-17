@@ -1,6 +1,6 @@
 ## Projected Gradient Method with GPA3 ##
 
-function method3(f, ∇f, ε, max_iter)
+function method3(x0, f, ∇f, ε, max_iter)
 
     fvals = Float64[]
     gradnorms = Float64[]
