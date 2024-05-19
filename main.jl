@@ -10,7 +10,7 @@ using LinearAlgebra, DataFrames
 
 ## Parameters choose ##
 
-x0 = rand(10)
+x0 = [1, 1.9]
 n = length(x0) # Dimensão da Função Dixon-Price
 σ = 1.e-4 # Parâmetro da Busca de Armijo
 ε = 1.e-5 # Critério de parada do Método
@@ -20,7 +20,7 @@ n = length(x0) # Dimensão da Função Dixon-Price
 γ_inicial = 1.0
 min_step = 1.e-5
 max_iter = 10000
-strategy = "GPA1"
+strategy = "GPA2"
 feasible_set = 1
 
 ## Feasible set choose ##
@@ -53,7 +53,7 @@ end
 
 ENV["LINES"] = 1000
 println(resultado[3])
-# println("Real global minimum: ", global_minimum)
 # println("Global minimum found: ", resultado[1])
 println("Minimum value of f: ", resultado[2])
 println("Total time spent: ", resultado[4])
+println("Encontrou a solução?", " ", resultado[5])
