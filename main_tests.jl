@@ -6,7 +6,7 @@ include("method1.jl")
 include("method2.jl")
 include("method3.jl")
 
-using LinearAlgebra, DataFrames, ProgressMeter
+using LinearAlgebra, DataFrames, BenchmarkProfiles, Plots
 
 ## Parameters choose ##
 
@@ -24,17 +24,19 @@ max_iter = 10000
 feasible_sets = [1]
 strategies = ["GPA1", "GPA2"]
 dimensions = [3, 10, 15]
+nguess = 3
 
-total_iter = length(feasible_sets) * length(strategies) * 3
-@showprogress 1 "Executando testes..." for iter in 1:total_iter
+times = Float64[] # Lista para armazenar os tempos de execução
+iters = Float64[]  # Lista para armazenar a quantidade de iteradas
 
-for dimension in dimensions 
+for strategy in strategies
    for feasible_set in feasible_sets 
-      for strategy in strategies
-         for k in 1:5
+      for dimension in dimensions
+         for k in 1:nguess
          global n
          x0 = rand(dimension)
          n = length(x0)
+         t0 = time()
          global projection
 
          if feasible_set == 1
@@ -58,18 +60,50 @@ for dimension in dimensions
             elseif strategy == "GPA3"
             resultado = method3(x0, f, ∇f, ε, max_iter) 
          end
+         t1 = time()
+         elapsed_time = t1 - t0
+         
+         if resultado[5] > 0
+            push!(times, Inf)
+            push!(iters, Inf)
+         else
+            iteration = size(resultado[6], 2)
+            push!(iters, iteration)
+            push!(times, elapsed_time) 
+         end 
 
          ENV["LINES"] = 10000
          println(resultado[3])
          println("Minimum value of f: ", resultado[2])
          println("Total time spent: ", resultado[4])
          println("x_0 = ", x0) 
-         println("Executando teste com: conjunto viável = $feasible_set, estratégia = $strategy, dimension = $dimension")  
+         println("Executando teste com: conjunto viável = $feasible_set, estratégia = $strategy, dimension = $dimension")
+         println("Iters = ", iters)
+         println("Elapsed time = ", times)
          end
       end
    end 
 end
-end
 
-total = length(strategies) * 3 * length(feasible_sets) * length(dimensions)
-println("Total problems: ", total)
+total = length(feasible_sets) * length(dimensions) * nguess
+println("Total problems: ", 2*total)
+
+## Performance profile ##
+
+h = total;
+
+X=[times[1:h] times[h+1:2h]]; #Matriz com os tempos
+Y=[iters[1:h] iters[h+1:2h]]; #Matriz com as iteradas
+
+colors=[:royalblue1, :green2, :orange]
+
+P1 = performance_profile(PlotsBackend(), X, ["GPA1", "GPA2"], 
+xlabel = "CPU time ratio", ylabel = "Solved problems [%]", legend = :bottomright, 
+palette = colors, linewidth = 2)
+
+P2 = performance_profile(PlotsBackend(), Y, ["GPA1", "GPA2"], 
+xlabel = "Iterated", ylabel = "Solved problems [%]", legend = :bottomright, 
+palette = colors, linewidth = 2)
+
+plot(P1, P2, layout=(1,2), size=(700, 400))
+
