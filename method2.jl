@@ -21,7 +21,7 @@ function GPA2(x, f, ∇f, projection, σ, min_step, β_inicial)
         end
     end
     
-    return (β, ierror)
+    return (β, ierror, j)
 
  end
 
@@ -31,6 +31,7 @@ function GPA2(x, f, ∇f, projection, σ, min_step, β_inicial)
     gradnorms = Float64[]
     stepsizes_β = Float64[]
     stepsizes_γ = Float64[]
+    avalf = Float64[]
     iteration_time = Float64[]
     
     # Initialization
@@ -52,15 +53,16 @@ function GPA2(x, f, ∇f, projection, σ, min_step, β_inicial)
         ∇fx = ∇f(x) 
         fx = f(x)
         gradnorm = norm(∇fx)
-        β = GPA2(x, f, ∇f, projection, σ, min_step, β_inicial)  
-        x = projection(x - β[1] * ∇fx)
+        newstep = GPA2(x, f, ∇f, projection, σ, min_step, β_inicial)  
+        x = projection(x - newstep[1] * ∇fx)
         seqx = [seqx x]
         it = time() - it0
         push!(fvals, fx)
         push!(gradnorms, gradnorm)
         push!(iteration_time, it)
         push!(stepsizes_γ, 1.0)
-        push!(stepsizes_β, β[2]) 
+        push!(stepsizes_β, newstep[1]) 
+        push!(avalf, newstep[3])
         
         # First stopping condition
         if norm(x - x_k) < ε
@@ -79,7 +81,7 @@ function GPA2(x, f, ∇f, projection, σ, min_step, β_inicial)
         end   
     end
 
-    info = DataFrame(fvals = fvals, gradnorms = gradnorms, stepsizes_β = stepsizes_β, stepsizes_γ = stepsizes_γ, iteration_time = iteration_time)
+    info = DataFrame(fvals = fvals, gradnorms = gradnorms, stepsizes_β = stepsizes_β, avalf_β = avalf, stepsizes_γ = stepsizes_γ, iteration_time = iteration_time)
     et = time() - t0
-    return (x, f(x), info, et, ierror, seqx)
+    return (x, f(x), info, et, ierror, seqx, avalf)
 end
