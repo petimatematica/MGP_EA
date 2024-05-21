@@ -26,7 +26,7 @@ function GPA1(x, f, ∇f, projection, σ, min_step, γ_inicial, β_inicial)
     if β < β1 || β > β2
        β = β / 2.0
     end
-    return (γ, β, ierror)
+    return (γ, β, ierror, j)
 end
 
 function method1(x0, f, ∇f, ε, max_iter, GPA1)
@@ -35,8 +35,8 @@ function method1(x0, f, ∇f, ε, max_iter, GPA1)
     gradnorms = Float64[]
     stepsizes_β = Float64[]
     stepsizes_γ = Float64[]
+    avalf = Float64[]
     iteration_time = Float64[]
-    #seqx = Vector{Float64}[]
     
     # Initialization
     ierror = 0
@@ -65,6 +65,7 @@ function method1(x0, f, ∇f, ε, max_iter, GPA1)
         push!(iteration_time, it)
         push!(stepsizes_β, newsteps[2])
         push!(stepsizes_γ, newsteps[1])
+        push!(avalf, newsteps[4])
         push!(fvals, fx) 
         push!(gradnorms, gradnorm)
         
@@ -84,8 +85,7 @@ function method1(x0, f, ∇f, ε, max_iter, GPA1)
             break
         end
     end
-
-    info = DataFrame(fvals = fvals, gradnorms = gradnorms, stepsizes_β = stepsizes_β, stepsizes_γ = stepsizes_γ, iteration_time = iteration_time)
+    info = DataFrame(fvals = fvals, gradnorms = gradnorms, stepsizes_β = stepsizes_β, stepsizes_γ = stepsizes_γ, avalf_γ = avalf, iteration_time = iteration_time)
     et = time() - t0
-    return (x, f(x), info, et, ierror, seqx)
+    return (x, f(x), info, et, ierror, seqx, avalf)
 end
