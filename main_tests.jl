@@ -20,14 +20,16 @@ min_step = 1.e-5
 max_iter = 10000
 
 ## Organizando os testes ##
+## Avaliando tempo, número de iteradas e número de avaliação de função ##
 
-feasible_sets = [1]
+feasible_sets = [1, 2]
 strategies = ["GPA1", "GPA2"]
 dimensions = [3, 10, 15]
-nguess = 3
+nguess = 5
 
 times = Float64[] # Lista para armazenar os tempos de execução
 iters = Float64[]  # Lista para armazenar a quantidade de iteradas
+avalf = Float64[] # Lista para armazenar a quantiddade de avaliações de função
 
 for strategy in strategies
    for feasible_set in feasible_sets 
@@ -66,10 +68,13 @@ for strategy in strategies
          if resultado[5] > 0
             push!(times, Inf)
             push!(iters, Inf)
+            push!(avalf, Inf)
          else
             iteration = size(resultado[6], 2)
+            total_avals = sum(resultado[7])
+            push!(times, elapsed_time)
             push!(iters, iteration)
-            push!(times, elapsed_time) 
+            push!(avalf, total_avals)
          end 
 
          ENV["LINES"] = 10000
@@ -80,6 +85,7 @@ for strategy in strategies
          println("Executando teste com: conjunto viável = $feasible_set, estratégia = $strategy, dimension = $dimension")
          println("Iters = ", iters)
          println("Elapsed time = ", times)
+         println("Function evaluations =", avalf)
          end
       end
    end 
@@ -92,8 +98,9 @@ println("Total problems: ", 2*total)
 
 h = total;
 
-X=[times[1:h] times[h+1:2h]]; #Matriz com os tempos
-Y=[iters[1:h] iters[h+1:2h]]; #Matriz com as iteradas
+X = [times[1:h] times[h+1:2h]]; #Matriz com os tempos
+Y = [iters[1:h] iters[h+1:2h]]; #Matriz com as iteradas
+Z = [avalf[1:h] avalf[h+1:2h]]; #Matriz com as avaliações de função
 
 colors=[:royalblue1, :green2, :orange]
 
@@ -102,8 +109,13 @@ xlabel = "CPU time ratio", ylabel = "Solved problems [%]", legend = :bottomright
 palette = colors, linewidth = 2)
 
 P2 = performance_profile(PlotsBackend(), Y, ["GPA1", "GPA2"], 
-xlabel = "Iterated", ylabel = "Solved problems [%]", legend = :bottomright, 
+xlabel = "Iteration", ylabel = "Solved problems [%]", legend = :bottomright, 
 palette = colors, linewidth = 2)
 
-plot(P1, P2, layout=(1,2), size=(700, 400))
+P3 = performance_profile(PlotsBackend(), Z, ["GPA1", "GPA2"], 
+xlabel = "Function evaluations", ylabel = "Solved problems [%]", legend = :bottomright, 
+palette = colors, linewidth = 2)
+
+final = plot(P1, P2, P3, layout=(1,3), size=(1400, 300))
+savefig("Performance.png")
 
