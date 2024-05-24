@@ -17,15 +17,15 @@ using LinearAlgebra, DataFrames, BenchmarkProfiles, Plots
 β2 = 1.0
 γ_inicial = 1.0
 min_step = 1.e-5
-max_iter = 10000
+max_iter = 30000
 
 ## Organizando os testes ##
 ## Avaliando tempo, número de iteradas e número de avaliação de função ##
 
-feasible_sets = [1, 2]
-strategies = ["GPA1", "GPA2"]
-dimensions = [3, 10, 15]
-nguess = 5
+feasible_sets = [1]
+strategies = ["GPA1", "GPA2", "GPA3"]
+dimensions = [3, 8, 10]
+nguess = 3
 
 times = Float64[] # Lista para armazenar os tempos de execução
 iters = Float64[]  # Lista para armazenar a quantidade de iteradas
@@ -60,7 +60,7 @@ for strategy in strategies
             elseif strategy == "GPA2"
             resultado = method2(x0, f, ∇f, ε, max_iter, GPA2)
             elseif strategy == "GPA3"
-            resultado = method3(x0, f, ∇f, ε, max_iter) 
+            resultado = method3(x0, f, ∇f, ε, max_iter, min_step) 
          end
          t1 = time()
          elapsed_time = t1 - t0
@@ -92,30 +92,32 @@ for strategy in strategies
 end
 
 total = length(feasible_sets) * length(dimensions) * nguess
-println("Total problems: ", 2*total)
+println("Total tests: ", 3*total)
 
 ## Performance profile ##
 
 h = total;
 
-X = [times[1:h] times[h+1:2h]]; #Matriz com os tempos
-Y = [iters[1:h] iters[h+1:2h]]; #Matriz com as iteradas
-Z = [avalf[1:h] avalf[h+1:2h]]; #Matriz com as avaliações de função
+X = [times[1:h] times[h+1:2h] times[2h+1:3h]]; #Matriz com os tempos
+Y = [iters[1:h] iters[h+1:2h] times[2h+1:3h]]; #Matriz com as iteradas
+Z = [avalf[1:h] avalf[h+1:2h] avalf[2h+1:3h]]; #Matriz com as avaliações de função
 
 colors=[:royalblue1, :green2, :orange]
 
-P1 = performance_profile(PlotsBackend(), X, ["GPA1", "GPA2"], 
-xlabel = "CPU time ratio", ylabel = "Solved problems [%]", legend = :bottomright, 
-palette = colors, linewidth = 2)
+# P1 = performance_profile(PlotsBackend(), X, ["GPA1", "GPA2", "GPA3"], 
+# xlabel = "CPU time ratio", ylabel = "Solved problems [%]", legend = :bottomright, 
+# palette = colors, linewidth = 2)
 
-P2 = performance_profile(PlotsBackend(), Y, ["GPA1", "GPA2"], 
+P2 = performance_profile(PlotsBackend(), Y, ["GPA1", "GPA2", "GPA3"], 
 xlabel = "Iteration", ylabel = "Solved problems [%]", legend = :bottomright, 
-palette = colors, linewidth = 2)
+palette = colors, linewidth = 2.5)
 
-P3 = performance_profile(PlotsBackend(), Z, ["GPA1", "GPA2"], 
-xlabel = "Function evaluations", ylabel = "Solved problems [%]", legend = :bottomright, 
-palette = colors, linewidth = 2)
+# P3 = performance_profile(PlotsBackend(), Z, ["GPA1", "GPA2"], 
+# xlabel = "Function evaluations", ylabel = "Solved problems [%]", legend = :bottomright, 
+# palette = colors, linewidth = 2)
 
-final = plot(P1, P2, P3, layout=(1,3), size=(1400, 300))
-savefig("Performance.png")
+plot(P2)
+
+# final = plot(P1, P2, P3, layout=(1,3), size=(1400, 300))
+# savefig("Performance.png")
 
