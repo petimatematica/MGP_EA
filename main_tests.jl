@@ -12,10 +12,10 @@ using LinearAlgebra, DataFrames, BenchmarkProfiles, Plots
 
 σ = 1.e-4 # Parâmetro da Busca de Armijo
 ε = 1.e-5 # Critério de parada do Método
-β_inicial = 1.0 # Comprimento de passo inicial
+β_start = 1.0 # Comprimento de passo inicial
 β1 = 1.e-6
 β2 = 1.0
-γ_inicial = 1.0
+γ_start = 1.0
 min_step = 1.e-5
 max_iter = 30000
 
