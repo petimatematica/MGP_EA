@@ -1,31 +1,28 @@
 ## Projected Gradient Method with GPA1 ##
 
-function GPA2(x, f, ∇f, projection, σ, min_step, β_inicial)
+function GPA2(x, f, ∇f, projection, σ, min_step, β_start)
     ierror = 0
-    β = β_inicial
+    β = β_start
     j = 0
  
     while true
-     z_kj = projection(x - β * 2.0^(-j) * ∇f(x)) # Calcula o ponto z_kj
-     stptest = f(z_kj) - f(x) + σ * dot(∇f(x), x - z_kj) # Armijo
+     zkj = projection(x - β * 2.0^(-j) * ∇f(x)) 
+     stptest = f(zkj) - f(x) + σ * dot(∇f(x), x - zkj) 
  
-        if stptest > 0.0 # Armijo test   
+        if stptest > 0.0 
          j += 1 
         else
-            β = β_inicial * 2.0^(-j)
+            β = β_start * 2.0^(-j)
             if β < min_step
                ierror = 1
                println("Step length too small!")
             end
-            break
         end
-    end
-    
+    end 
     return (β, ierror, j)
+end
 
- end
-
- function method2(x0, f, ∇f, ε, max_iter, GPA2)
+function method2(x0, f, ∇f, ε, max_iter, GPA2)
 
     fvals = Float64[]
     gradnorms = Float64[]
@@ -42,18 +39,20 @@ function GPA2(x, f, ∇f, projection, σ, min_step, β_inicial)
     t0 = time()
 
     if norm(x - projection(x - ∇f(x))) < ε
-        ierror = 3
         println("x0 is a stationary point!")
         return (x, f(x))
     end
     
     while true
-        x_k = copy(x)
+        xk = copy(x)
         it0 = time()
         ∇fx = ∇f(x) 
         fx = f(x)
         gradnorm = norm(∇fx)
-        newstep = GPA2(x, f, ∇f, projection, σ, min_step, β_inicial)  
+        newstep = GPA2(x, f, ∇f, projection, σ, min_step, β_start)
+        if ierror == 1
+            break
+        end  
         x = projection(x - newstep[1] * ∇fx)
         seqx = [seqx x]
         it = time() - it0
@@ -65,7 +64,7 @@ function GPA2(x, f, ∇f, projection, σ, min_step, β_inicial)
         push!(avalf, newstep[3])
         
         # First stopping condition
-        if norm(x - x_k) < ε
+        if norm(x - xk) < ε
             println("The solution has found!")
             break
         end
