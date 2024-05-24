@@ -8,22 +8,22 @@ include("method3.jl")
 
 using LinearAlgebra, DataFrames
 
-## Parameters choose ##
+# Parameters choose #
 
-x0 = [1, 1.9]
-n = length(x0) # Dimensão da Função Dixon-Price
-σ = 1.e-4 # Parâmetro da Busca de Armijo
-ε = 1.e-5 # Critério de parada do Método
-β_inicial = 1.0 # Comprimento de passo inicial
+x0 = rand(3)
+n = length(x0) 
+σ = 1.e-4 
+ε = 1.e-5 
+β_start = 1.0
 β1 = 1.e-6
 β2 = 1.0
-γ_inicial = 1.0
+γ_start = 1.0
 min_step = 1.e-5
-max_iter = 10000
-strategy = "GPA2"
+max_iter = 30000
+strategy = "GPA1"
 feasible_set = 1
 
-## Feasible set choose ##
+# Conditions #
 
 if feasible_set == 1
    projection = projection1
@@ -39,22 +39,19 @@ if feasible_set == 1
    projection = projection6
 end
 
-## Estrategy choose ##
-
 if strategy == "GPA1"
-   resultado = method1(x0, f, ∇f, ε, max_iter, GPA1)
+   result = method1(x0, f, ∇f, ε, max_iter, GPA1)
    elseif strategy == "GPA2"
-   resultado = method2(x0, f, ∇f, ε, max_iter, GPA2)
+   result = method2(x0, f, ∇f, ε, max_iter, GPA2)
    elseif strategy == "GPA3"
-   resultado = method3(x0, f, ∇f, ε, max_iter) 
+   result = method3(x0, f, ∇f, ε, max_iter, min_step) 
 end
 
-## Show the result ##
+# Show the result #
 
 ENV["LINES"] = 1000
-println(resultado[3])
-# println("Global minimum found: ", resultado[1])
-println("Minimum value of f: ", resultado[2])
-println("Total time spent: ", resultado[4])
-println("Function evaluations = ", sum(resultado[7]))
-println("Encontrou a solução?", " ", resultado[5])
+println(result[3])
+println("Minimum value of f: ", result[2])
+println("Total time spent: ", result[4])
+println("Function evaluations = ", sum(result[7]))
+println("Ierror = ", result[5])
