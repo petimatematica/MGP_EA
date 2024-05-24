@@ -8,9 +8,9 @@ include("method3.jl")
 
 using LinearAlgebra, DataFrames
 
-# Parameters choose #
+# Parameters #
 
-x0 = rand(3)
+x0 = rand(2)
 n = length(x0) 
 σ = 1.e-4 
 ε = 1.e-5 
@@ -20,7 +20,7 @@ n = length(x0)
 γ_start = 1.0
 min_step = 1.e-5
 max_iter = 30000
-strategy = "GPA1"
+strategy = "GPA2"
 feasible_set = 1
 
 # Conditions #
