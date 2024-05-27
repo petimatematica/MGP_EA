@@ -10,7 +10,7 @@ using LinearAlgebra, DataFrames
 
 # Parameters #
 
-x0 = rand(2)
+x0 = rand(3)
 n = length(x0) 
 σ = 1.e-4 
 ε = 1.e-5 
@@ -21,7 +21,7 @@ n = length(x0)
 min_step = 1.e-5
 max_iter = 30000
 strategy = "GPA2"
-feasible_set = 1
+feasible_set = 6
 
 # Conditions #
 
