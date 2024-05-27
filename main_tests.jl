@@ -116,7 +116,7 @@ palette = colors, linewidth = 2.5)
 # xlabel = "Function evaluations", ylabel = "Solved problems [%]", legend = :bottomright, 
 # palette = colors, linewidth = 2)
 
-plot(P2)
+#plot(P2)
 
 # final = plot(P1, P2, P3, layout=(1,3), size=(1400, 300))
 # savefig("Performance.png")
