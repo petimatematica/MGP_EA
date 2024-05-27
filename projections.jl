@@ -1,7 +1,7 @@
 using LinearAlgebra
 
 #
-# PROJECTION FUNCTIONS FOR DIFERENT SETS 
+# PROJECTION FUNCTIONS FOR DIFERENT FEASIBLE SETS 
 #
 
 ## PROJECTION 01: O CONJUNTO C É UMA BOLA DE RAIO δ E CENTRO y ##
@@ -66,27 +66,35 @@ end
 
 ## PROJECTION 06: C É O CONJUNTO DOS PONTOS QUE SATISFAZEM UMA IGUALDADE COM UM PRODUTO DE VETOR E MATRIZ ##
 
+function matrix(rank, n)
+    matrix_0 = rand(rank, n)  
+    U, Σ, V = svd(matrix_0)
+    Σ[rank + 1:end] .= 0      
+    A = U[:, 1:rank] * Diagonal(Σ[1:rank]) * V[:, 1:rank]'
+    return A
+end
+
 function projection6(x)
     n = length(x)
-    rank = 3
-    b = rand(rank)
-    lines = rank
-    columns = n
-    function matrix(rank, lines, columns)
-        matrix_0 = rand(lines, columns)
-        U, Σ, V = svd(matrix_0)
-        Σ[rank + 1:end] .= 0
-        A = U * Diagonal(Σ) * V'
-        return A
-    end
-    A = matrix(rank, lines, columns)
-    projection = x - A' * inv(A*A') * (A*x - b)
-    return projection
+    rank = 2  
 
+    global A_dict
+    if isempty(A_dict)
+        A_dict = Dict{Int, Matrix{Float64}}()
+    end
+
+    if !haskey(A_dict, n)
+        A_dict[n] = matrix(rank, n)  
+    end
+
+    A = A_dict[n]
+    b = fill(0, size(A, 1))
+    projection = x - A' * inv(A * A') * (A * x - b)
+    return projection
 end
 
 ## TESTE ##
 
-# y = [0.5, 2, -1.2, 44]
+# y = [0.5, 2, 3, 1];
 # println("Projeção de x em C: ", projection6(y))
-
+#hey = projection6(y)
