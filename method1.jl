@@ -8,7 +8,8 @@ function GPA1(x, f, ∇f, projection, σ, min_step, γ_start, β_start)
     zk = projection(x - β * ∇f(x))
 
     while true 
-        stptest = f(x + 2.0^(-j) * (zk - x)) - f(x) - σ * 2.0^(-j) * dot(∇f(x), zk - x)  
+     stptest = f(x + 2.0^(-j) * (zk - x)) - f(x) - σ * 2.0^(-j) * dot(∇f(x), zk - x)  
+        
         if stptest > 0.0   
            j += 1 
         else
@@ -17,7 +18,8 @@ function GPA1(x, f, ∇f, projection, σ, min_step, γ_start, β_start)
                ierror = 1
                println("Step length too small!")
                break
-            end  
+            end
+            break  
         end       
     end
     
@@ -49,7 +51,7 @@ function method1(x0, f, ∇f, ε, max_iter, GPA1)
         println("x0 is a stationary point!")
         return (x, f(x))
     end
-    
+
     while true
         xk = copy(x)
         it0 = time()
@@ -57,11 +59,16 @@ function method1(x0, f, ∇f, ε, max_iter, GPA1)
         fx = f(x) 
         gradnorm = norm(∇fx)
         newsteps = GPA1(x, f, ∇f, projection, σ, min_step, γ_start, β_start)
+        
+        if ierror == 1
+            break
+        end 
+
         z = projection(x - newsteps[2] * ∇f(x)) 
         x = x + newsteps[1] * (z - x)
         seqx = [seqx x] 
         it = time() - it0
-
+        
         push!(iteration_time, it)
         push!(stepsizes_β, newsteps[2])
         push!(stepsizes_γ, newsteps[1])
