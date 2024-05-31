@@ -6,7 +6,7 @@ include("method1.jl")
 include("method2.jl")
 include("method3.jl")
 
-using LinearAlgebra, DataFrames
+using LinearAlgebra, DataFrames, Random
 
 # Parameters #
 
