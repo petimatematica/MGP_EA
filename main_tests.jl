@@ -6,7 +6,7 @@ include("method1.jl")
 include("method2.jl")
 include("method3.jl")
 
-using LinearAlgebra, DataFrames, BenchmarkProfiles, Plots
+using LinearAlgebra, DataFrames, BenchmarkProfiles, Plots, Random
 
 ## Parameters choose ##
 
@@ -23,8 +23,8 @@ max_iter = 30000
 ## Avaliando tempo, número de iteradas e número de avaliação de função ##
 
 feasible_sets = [1]
-strategies = ["GPA1", "GPA2", "GPA3"]
-dimensions = [3, 8, 10]
+strategies = ["GPA1", "GPA2"]
+dimensions = [3, 5, 8]
 nguess = 3
 
 times = Float64[] # Lista para armazenar os tempos de execução
@@ -98,26 +98,25 @@ println("Total tests: ", 3*total)
 
 h = total;
 
-X = [times[1:h] times[h+1:2h] times[2h+1:3h]]; #Matriz com os tempos
-Y = [iters[1:h] iters[h+1:2h] times[2h+1:3h]]; #Matriz com as iteradas
-Z = [avalf[1:h] avalf[h+1:2h] avalf[2h+1:3h]]; #Matriz com as avaliações de função
+X = [times[1:h] times[h+1:2h]]; #Matriz com os tempos
+Y = [iters[1:h] iters[h+1:2h]]; #Matriz com as iteradas
+Z = [avalf[1:h] avalf[h+1:2h]]; #Matriz com as avaliações de função
 
-colors=[:royalblue1, :green2, :orange]
+colors=[:darkblue, :orangered2]
 
-# P1 = performance_profile(PlotsBackend(), X, ["GPA1", "GPA2", "GPA3"], 
-# xlabel = "CPU time ratio", ylabel = "Solved problems [%]", legend = :bottomright, 
-# palette = colors, linewidth = 2)
+P1 = performance_profile(PlotsBackend(), X, ["GPA1", "GPA2"], 
+xlabel = "CPU time ratio", ylabel = "Solved problems [%]", legend = :bottomright, 
+palette = colors, linewidth = 2.5)
 
-P2 = performance_profile(PlotsBackend(), Y, ["GPA1", "GPA2", "GPA3"], 
+P2 = performance_profile(PlotsBackend(), Y, ["GPA1", "GPA2"], 
 xlabel = "Iteration", ylabel = "Solved problems [%]", legend = :bottomright, 
 palette = colors, linewidth = 2.5)
 
-# P3 = performance_profile(PlotsBackend(), Z, ["GPA1", "GPA2"], 
-# xlabel = "Function evaluations", ylabel = "Solved problems [%]", legend = :bottomright, 
-# palette = colors, linewidth = 2)
+P3 = performance_profile(PlotsBackend(), Z, ["GPA1", "GPA2"], 
+xlabel = "Function evaluations", ylabel = "Solved problems [%]", legend = :bottomright, 
+palette = colors, linewidth = 2.5)
 
-#plot(P2)
+final = plot(P1, P2, P3, layout = (3, 1), size=(600,1500), left_margin = 10Plots.mm)
 
-# final = plot(P1, P2, P3, layout=(1,3), size=(1400, 300))
-# savefig("Performance.png")
+savefig(final, "performances_profile.png")
 
