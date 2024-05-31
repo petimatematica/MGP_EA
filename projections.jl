@@ -1,4 +1,4 @@
-using LinearAlgebra
+using LinearAlgebra, Random
 
 #
 # PROJECTION FUNCTIONS FOR DIFERENT FEASIBLE SETS 
@@ -67,7 +67,8 @@ end
 ## PROJECTION 06: C É O CONJUNTO DOS PONTOS QUE SATISFAZEM UMA IGUALDADE COM UM PRODUTO DE VETOR E MATRIZ ##
 
 function matrix(rank, n)
-    matrix_0 = rand(rank, n)  
+    rng = MersenneTwister(1234)
+    matrix_0 = rand(rng, rank, n)  
     U, Σ, V = svd(matrix_0)
     Σ[rank + 1:end] .= 0      
     A = U[:, 1:rank] * Diagonal(Σ[1:rank]) * V[:, 1:rank]'
@@ -77,24 +78,13 @@ end
 function projection6(x)
     n = length(x)
     rank = 2  
-
-    global A_dict
-    if isempty(A_dict)
-        A_dict = Dict{Int, Matrix{Float64}}()
-    end
-
-    if !haskey(A_dict, n)
-        A_dict[n] = matrix(rank, n)  
-    end
-
-    A = A_dict[n]
+    A = matrix(rank, n)
     b = fill(0, size(A, 1))
     projection = x - A' * inv(A * A') * (A * x - b)
     return projection
 end
 
-## TESTE ##
+## TEST ##
 
 # y = [0.5, 2, 3, 1];
 # println("Projeção de x em C: ", projection6(y))
-#hey = projection6(y)
