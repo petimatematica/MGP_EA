@@ -1,8 +1,5 @@
 ## Projected Gradient Method with GPA1 ##
 
-# include("dixonprice.jl")
-# include("projections.jl")
-
 function GPA2(x, f, ∇f, projection, σ, min_step, β_start)
     ierror = 0
     β = β_start
@@ -26,19 +23,6 @@ function GPA2(x, f, ∇f, projection, σ, min_step, β_start)
     end 
     return (β, ierror, j)
 end
-
-# projection = projection1
-# x0 = rand(2)
-# n = length(x0) 
-# σ = 1.e-4 
-# ε = 1.e-5 
-# β_start = 1.0
-# β1 = 1.e-6
-# β2 = 1.0
-# γ_start = 1.0
-# min_step = 1.e-5
-
-# hey = GPA2(x0, f, ∇f, projection, σ, min_step, β_start)
 
 function method2(x0, f, ∇f, ε, max_iter, GPA2)
 
