@@ -1,4 +1,4 @@
-# ## Projected Gradient Method with GPA1 ##
+## Projected Gradient Method with GPA1 ##
 
 function GPA1(x, f, ∇f, projection, σ, min_step, γ_start, β_start)
     ierror = 0
