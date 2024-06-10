@@ -4,7 +4,6 @@ include("dixonprice.jl")
 include("projections.jl")
 include("method1.jl")
 include("method2.jl")
-include("method3.jl")
 
 using LinearAlgebra, DataFrames, BenchmarkProfiles, Plots, Random
 
