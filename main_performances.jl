@@ -23,7 +23,7 @@ max_iter = 30000
 
 feasible_sets = [1, 2, 3, 4, 5, 6]
 strategies = ["GPA1", "GPA2"]
-dimensions = [3, 5, 8]
+dimensions = [3, 10, 50, 100, 150]
 guess = MersenneTwister(1234)
 nguess = 5
 
@@ -127,7 +127,7 @@ X = [times1 times2];
 Y = [iters1 iters2]; 
 Z = [avalf1 avalf2]; 
 
-colors=[:blue2, :orangered2]
+colors=[:blue2, :green2]
 
 P1 = performance_profile(PlotsBackend(), X, ["GPA1", "GPA2"], 
 xlabel = "CPU time ratio", ylabel = "Solved problems [%]", legend = :bottomright, 
