@@ -10,30 +10,31 @@ using LinearAlgebra, DataFrames, BenchmarkProfiles, Plots, Random
 
 ## Parameters choose ##
 
-σ = 1.e-4 # Parâmetro da Busca de Armijo
-ε = 1.e-5 # Critério de parada do Método
-β_start = 1.0 # Comprimento de passo inicial
+σ = 1.e-4 
+ε = 1.e-5 
+β_start = 1.0 
 β1 = 1.e-6
 β2 = 1.0
 γ_start = 1.0
 min_step = 1.e-5
 max_iter = 30000
 
-## Organizando os testes ##
-## Avaliando tempo, número de iteradas e número de avaliação de função ##
+## Analysis of: time, number of iterations and number of function evaluations ##
 
-feasible_sets = [1]
+feasible_sets = [1, 2, 3, 4, 5, 6]
 strategies = ["GPA1", "GPA2"]
 dimensions = [3, 5, 8]
 guess = MersenneTwister(1234)
-nguess = 3
+nguess = 5
 
-times1 = Float64[] # Lista para armazenar os tempos de execução da GPA1
-times2 = Float64[] # Lista para armazenar os tempos de execução da GPA2
-iters1 = Float64[]  # Lista para armazenar a quantidade de iteradas da GPA1
-iters2 = Float64[]  # Lista para armazenar a quantidade de iteradas da GPA2
-avalf1 = Float64[] # Lista para armazenar a quantiddade de avaliações de função da GPA1
-avalf2 = Float64[] # Lista para armazenar a quantiddade de avaliações de função da GPA2
+times1 = Float64[] 
+times2 = Float64[] 
+iters1 = Float64[]  
+iters2 = Float64[]  
+avalf1 = Float64[] 
+avalf2 = Float64[]
+
+t_inicial = time()
 
 for k in 1:nguess
    for feasible_set in feasible_sets 
@@ -102,32 +103,31 @@ for k in 1:nguess
                avalf = avalf2
             end
 
-            ENV["LINES"] = 10000
-            println(resultado[3])
-            println("Minimum value of f: ", resultado[2])
-            println("Total time spent: ", resultado[4])
-            println("x_0 = ", x0) 
-            println("Executando teste com: conjunto viável = $feasible_set, estratégia = $strategy, dimension = $dimension")
-            println("Iters = ", iters)
-            println("Elapsed time = ", times)
-            println("Function evaluations =", avalf)
+            # ENV["LINES"] = 10000
+            # println(resultado[3])
+            # println("Minimum value of f: ", resultado[2])
+            # println("Total time spent: ", resultado[4])
+            # println("x_0 = ", x0) 
+            # println("Running test with: feasible set = $feasible_set, strategy = $strategy, dimension = $dimension")
+            # println("Iters = ", iters)
+            # println("Elapsed time = ", times)
+            # println("Function evaluations =", avalf)
          end
       end
    end 
 end
 
-total = length(feasible_sets) * length(dimensions) * nguess * 2
-println("Total tests: ", total)
+t_final = time() - t_inicial
+# total = length(feasible_sets) * length(dimensions) * nguess * 2
+# println("Total tests: ", total)
 
-## Performance profile ##
+## Performances profile ##
 
-X = [times1 times2]; #Matriz com os tempos
-Y = [iters1 iters2]; #Matriz com as iteradas
-Z = [avalf1 avalf2]; #Matriz com as avaliações de função
+X = [times1 times2]; 
+Y = [iters1 iters2]; 
+Z = [avalf1 avalf2]; 
 
 colors=[:blue2, :orangered2]
-
-Plots.backend(:png)
 
 P1 = performance_profile(PlotsBackend(), X, ["GPA1", "GPA2"], 
 xlabel = "CPU time ratio", ylabel = "Solved problems [%]", legend = :bottomright, 
@@ -141,7 +141,7 @@ P3 = performance_profile(PlotsBackend(), Z, ["GPA1", "GPA2"],
 xlabel = "Function evaluations", ylabel = "Solved problems [%]", legend = :bottomright, 
 palette = colors, linewidth = 2.5)
 
-final = plot(P1, P2, P3, layout = (3, 1), size=(600,1500), left_margin = 10Plots.mm, dpi=300)
-
-savefig(final, "performances_profile2.png")
+savefig(P1, "performance_profile_CPU_time_ratio.png")
+savefig(P2, "performance_profile_iteration.png")
+savefig(P3, "performance_profile_function_evaluations.png")
 
