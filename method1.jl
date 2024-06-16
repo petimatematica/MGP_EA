@@ -16,7 +16,7 @@ function GPA1(x, f, ∇f, projection, σ, min_step, γ_start, β_start)
            γ = 2.0^(-j)
             if γ < min_step
                ierror = 1
-               #println("Step length too small!")
+               println("Step length too small!")
                break
             end
             break  
@@ -78,7 +78,7 @@ function method1(x0, f, ∇f, ε, max_iter, GPA1)
         
         # First stopping condition
         if norm(x - xk) < ε
-           #println("The solution has found!")
+           println("The solution has found!")
             break
         end
 
