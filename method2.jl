@@ -15,7 +15,7 @@ function GPA2(x, f, ∇f, projection, σ, min_step, β_start)
             β = β_start * 2.0^(-j)
             if β < min_step
                ierror = 1
-               #println("Step length too small!")
+               println("Step length too small!")
                break
             end
             break
@@ -69,7 +69,7 @@ function method2(x0, f, ∇f, ε, max_iter, GPA2)
         
         # First stopping condition
         if norm(x - xk) < ε
-            #println("The solution has found!")
+            println("The solution has found!")
             break
         end
         
@@ -78,7 +78,7 @@ function method2(x0, f, ∇f, ε, max_iter, GPA2)
 
         # Second stopping condition
         if iter > max_iter
-            #println("Maximum of iterations was achieved! Stopping...")
+            println("Maximum of iterations was achieved! Stopping...")
             ierror = 2
             break
         end   
