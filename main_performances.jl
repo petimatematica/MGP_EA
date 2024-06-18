@@ -1,4 +1,4 @@
-## MAIN ##
+## Main Code - Performance profiles ##
 
 include("dixonprice.jl")
 include("projections.jl")
@@ -18,11 +18,11 @@ using LinearAlgebra, DataFrames, BenchmarkProfiles, Plots, Random
 min_step = 1.e-5
 max_iter = 30000
 
-## Analysis of: time, number of iterations and number of function evaluations ##
+## Analysis of time, number of iterations and number of function evaluations ##
 
-feasible_sets = [1, 2, 3, 4, 5, 6]
+feasible_sets = [1, 2, 3]
 strategies = ["GPA1", "GPA2"]
-dimensions = [3, 10, 50, 70]
+dimensions = [3, 10]
 guess = MersenneTwister(1234)
 nguess = 5
 
@@ -39,8 +39,8 @@ for k in 1:nguess
    for feasible_set in feasible_sets 
       for dimension in dimensions
          global n
-         x0 = rand(guess, dimension)
-         n = length(x0)
+         x = rand(guess, dimension)
+         n = length(x)
 
          for strategy in strategies
          
@@ -60,6 +60,9 @@ for k in 1:nguess
                elseif feasible_set == 6
                projection = projection6
             end
+
+            x0 = projection(x)
+            println("Running test with: x0 = $x0, feasible set = $feasible_set, strategy = $strategy, dimension = $dimension")
 
             if strategy == "GPA1"
                resultado = method1(x0, f, ∇f, ε, max_iter, GPA1)
@@ -81,7 +84,7 @@ for k in 1:nguess
                iters = iters1
                avalf = avalf1
                
-               else
+            else
                resultado = method2(x0, f, ∇f, ε, max_iter, GPA2)
                t1 = time()
                elapsed_time = t1 - t0
@@ -101,26 +104,18 @@ for k in 1:nguess
                iters = iters2
                avalf = avalf2
             end
-
-            # ENV["LINES"] = 10000
-            # println(resultado[3])
-            # println("Minimum value of f: ", resultado[2])
-            # println("Total time spent: ", resultado[4])
-            # println("x_0 = ", x0) 
-            # println("Running test with: feasible set = $feasible_set, strategy = $strategy, dimension = $dimension")
-            # println("Iters = ", iters)
-            # println("Elapsed time = ", times)
-            # println("Function evaluations =", avalf)
          end
       end
    end 
 end
 
 t_final = time() - t_inicial
-# total = length(feasible_sets) * length(dimensions) * nguess * 2
-# println("Total tests: ", total)
+println("Total time spent =", t_final)
+problems = length(feasible_sets) * length(dimensions) * nguess
+println("Number of problems: ", problems)
+println("Problems tested, generating performance profiles...")
 
-## Performances profile ##
+## Performance profiles ##
 
 X = [times1 times2]; 
 Y = [iters1 iters2]; 
@@ -130,17 +125,21 @@ colors=[:blue2, :green2]
 
 P1 = performance_profile(PlotsBackend(), X, ["GPA1", "GPA2"], 
 xlabel = "CPU time ratio", ylabel = "Solved problems [%]", legend = :bottomright, 
-palette = colors, linewidth = 2.5)
+palette = colors, linewidth = 2, dpi = 1000)
 
 P2 = performance_profile(PlotsBackend(), Y, ["GPA1", "GPA2"], 
 xlabel = "Iteration", ylabel = "Solved problems [%]", legend = :bottomright, 
-palette = colors, linewidth = 2.5)
+palette = colors, linewidth = 2, dpi = 1000)
 
 P3 = performance_profile(PlotsBackend(), Z, ["GPA1", "GPA2"], 
 xlabel = "Function evaluations", ylabel = "Solved problems [%]", legend = :bottomright, 
-palette = colors, linewidth = 2.5)
+palette = colors, linewidth = 2, dpi = 1000)
+
+println("Performance profiles generated, saving figures...")
 
 savefig(P1, "performance_profile_CPU_time_ratio.png")
 savefig(P2, "performance_profile_iteration.png")
 savefig(P3, "performance_profile_function_evaluations.png")
+
+println("Figures saved, the code has finished running.")
 
