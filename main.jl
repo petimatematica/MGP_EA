@@ -1,17 +1,16 @@
-## MAIN ##
+## Main Code ##
 
 include("dixonprice.jl")
 include("projections.jl")
 include("method1.jl")
 include("method2.jl")
-include("method3.jl")
 
 using LinearAlgebra, DataFrames, Random
 
 # Parameters #
-
-x0 = rand(3)
-n = length(x0) 
+guess = MersenneTwister(1234)
+x = rand(guess, 50)
+n = length(x) 
 σ = 1.e-4 
 ε = 1.e-5 
 β_start = 1.0
@@ -38,6 +37,8 @@ if feasible_set == 1
    elseif feasible_set == 6
    projection = projection6
 end
+
+x0 = projection(x)
 
 if strategy == "GPA1"
    result = method1(x0, f, ∇f, ε, max_iter, GPA1)
