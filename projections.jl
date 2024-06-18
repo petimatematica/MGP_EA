@@ -1,14 +1,12 @@
-using LinearAlgebra, Random
-
 #
-# PROJECTION FUNCTIONS FOR DIFERENT FEASIBLE SETS 
+# Projection functions for diferent feasible sets 
 #
 
-## PROJECTION 01: O CONJUNTO C É UMA BOLA DE RAIO δ E CENTRO y ##
+## Projection 01: Ball of ray δ and center y ##
 
 function projection1(x)
-    y = fill(0, n) # Centro do conjunto viável (Bola)
-    δ = 0.5 # Raio da Bola
+    y = fill(0, n) 
+    δ = 0.5 
     norm_yx = norm(y-x)
     if norm_yx <= δ
         return x
@@ -18,14 +16,13 @@ function projection1(x)
     end
 end
 
-## PROJECTION 02: C É O R^n+ ##
+## Projection 02: C is R^n+ ##
 
 function projection2(x)
     return max.(0, x)
 end
 
-## PROJECTION 03: C É UM HIPERCUBO DE DIMENSÃO n ##
-## Para cada dimensão, a amplitude é o intervalo [-1, 1]
+## Projection 03: C is a hypercube of dimension n. For each dimension, the range is [-1,1] ##
 
 function projection3(x)
     n = length(x)
@@ -44,7 +41,7 @@ function projection3(x)
     return projection
 end
 
-## PROJECTION 04: C É O CONJUNTO DOS PONTOS QUE SATISFAZEM UMA IGUALDADE COM UM PRODUTO INTERNO DEFINIDO ##
+## Projection 04: C is the set of points that stisfy an equality with inner product ##
 
 function projection4(x)
     n = length(x)
@@ -54,7 +51,7 @@ function projection4(x)
     return projection
 end
 
-## PROJECTION 05: C É O CONJUNTO DOS PONTOS QUE SATISFAZEM UMA IGUALDADE COM UM PRODUTO INTERNO DEFINIDO ##
+## Projection 05: C is the set of points that stisfy an equality with inner product ##
 
 function projection5(x)
     n = length(x)
@@ -64,10 +61,10 @@ function projection5(x)
     return projection
 end
 
-## PROJECTION 06: C É O CONJUNTO DOS PONTOS QUE SATISFAZEM UMA IGUALDADE COM UM PRODUTO DE VETOR E MATRIZ ##
+## Projection 06: C is the set of points that satisfy an equality with a product between a vector and a matrix with defined rank ##
 
 function matrix(rank, n)
-    rng = MersenneTwister(1234)
+    rng = MersenneTwister(3214)
     matrix_0 = rand(rng, rank, n)  
     U, Σ, V = svd(matrix_0)
     Σ[rank + 1:end] .= 0      
@@ -84,7 +81,7 @@ function projection6(x)
     return projection
 end
 
-## TEST ##
+## Test ##
 
 # y = [0.5, 2, 3, 1];
 # println("Projeção de x em C: ", projection6(y))
