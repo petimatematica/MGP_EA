@@ -20,9 +20,9 @@ max_iter = 30000
 
 ## Analysis of time, number of iterations and number of function evaluations ##
 
-feasible_sets = [1, 2, 3]
+feasible_sets = [1, 2, 3, 4, 5, 6]
 strategies = ["GPA1", "GPA2"]
-dimensions = [3, 10]
+dimensions = [5, 10, 50, 100, 500]
 guess = MersenneTwister(1234)
 nguess = 5
 
@@ -62,7 +62,7 @@ for k in 1:nguess
             end
 
             x0 = projection(x)
-            println("Running test with: x0 = $x0, feasible set = $feasible_set, strategy = $strategy, dimension = $dimension")
+            println("Running test with: feasible set = $feasible_set, strategy = $strategy, dimension = $dimension")
 
             if strategy == "GPA1"
                resultado = method1(x0, f, ∇f, ε, max_iter, GPA1)
@@ -110,7 +110,7 @@ for k in 1:nguess
 end
 
 t_final = time() - t_inicial
-println("Total time spent =", t_final)
+println("Total time spent = ", t_final/60)
 problems = length(feasible_sets) * length(dimensions) * nguess
 println("Number of problems: ", problems)
 println("Problems tested, generating performance profiles...")
