@@ -22,7 +22,7 @@ max_iter = 30000
 
 feasible_sets = [1, 2, 3, 4, 5, 6]
 strategies = ["GPA1", "GPA2"]
-dimensions = [5, 10, 50, 100, 500]
+dimensions = [5, 10, 30, 50, 100, 150, 200, 300, 400, 500]
 guess = MersenneTwister(1234)
 nguess = 5
 
@@ -65,17 +65,26 @@ for k in 1:nguess
             println("Running test with: feasible set = $feasible_set, strategy = $strategy, dimension = $dimension")
 
             if strategy == "GPA1"
-               resultado = method1(x0, f, ∇f, ε, max_iter, GPA1)
+               result = method1(x0, f, ∇f, ε, max_iter, GPA1)
                t1 = time()
                elapsed_time = t1 - t0
+               
+               if result[5] > 0
+                  ENV["LINES"] = 30000
+                  println(result[3])
+                  println("Minimum value of f: ", result[2])
+                  println("Total time spent: ", result[4])
+                  println("Function evaluations = ", sum(result[7]))
+                  println("Ierror = ", result[5])   
+               end
 
-               if resultado[5] > 0
+               if result[5] > 0
                   push!(times1, Inf)
                   push!(iters1, Inf)
                   push!(avalf1, Inf)
                else
-                  iteration = size(resultado[6], 2)
-                  total_avals = sum(resultado[7])
+                  iteration = size(result[6], 2)
+                  total_avals = sum(result[7])
                   push!(times1, elapsed_time)
                   push!(iters1, iteration)
                   push!(avalf1, total_avals)
@@ -85,17 +94,26 @@ for k in 1:nguess
                avalf = avalf1
                
             else
-               resultado = method2(x0, f, ∇f, ε, max_iter, GPA2)
+               result = method2(x0, f, ∇f, ε, max_iter, GPA2)
                t1 = time()
                elapsed_time = t1 - t0
 
-               if resultado[5] > 0
+               if result[5] > 0
+                  ENV["LINES"] = 30000
+                  println(result[3])
+                  println("Minimum value of f: ", result[2])
+                  println("Total time spent: ", result[4])
+                  println("Function evaluations = ", sum(result[7]))
+                  println("Ierror = ", result[5])
+               end
+
+               if result[5] > 0
                   push!(times2, Inf)
                   push!(iters2, Inf)
                   push!(avalf2, Inf)
                else
-                  iteration = size(resultado[6], 2)
-                  total_avals = sum(resultado[7])
+                  iteration = size(result[6], 2)
+                  total_avals = sum(result[7])
                   push!(times2, elapsed_time)
                   push!(iters2, iteration)
                   push!(avalf2, total_avals)
@@ -110,7 +128,7 @@ for k in 1:nguess
 end
 
 t_final = time() - t_inicial
-println("Total time spent = ", t_final/60)
+println("Total time spent = ", t_final/60, " ", "minutes")
 problems = length(feasible_sets) * length(dimensions) * nguess
 println("Number of problems: ", problems)
 println("Problems tested, generating performance profiles...")
@@ -142,4 +160,3 @@ savefig(P2, "performance_profile_iteration.png")
 savefig(P3, "performance_profile_function_evaluations.png")
 
 println("Figures saved, the code has finished running.")
-
