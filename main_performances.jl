@@ -5,7 +5,8 @@ include("projections.jl")
 include("method1.jl")
 include("method2.jl")
 
-using LinearAlgebra, DataFrames, BenchmarkProfiles, Plots, Random
+using LinearAlgebra, DataFrames, BenchmarkProfiles, Plots, Random, JLD2
+
 
 ## Parameters choose ##
 
@@ -46,6 +47,8 @@ for k in 1:nguess
          
             t0 = time()
             global projection
+            global f
+            global x0
 
             if feasible_set == 1
                projection = projection1
@@ -65,26 +68,17 @@ for k in 1:nguess
             println("Running test with: feasible set = $feasible_set, strategy = $strategy, dimension = $dimension")
 
             if strategy == "GPA1"
-               result = method1(x0, f, ∇f, ε, max_iter, GPA1)
+               (x, f(x), info, et, ierror, seqx, evalsf) = method1(x0, f, ∇f, ε, max_iter, GPA1)
                t1 = time()
                elapsed_time = t1 - t0
-               
-               if result[5] > 0
-                  ENV["LINES"] = 30000
-                  println(result[3])
-                  println("Minimum value of f: ", result[2])
-                  println("Total time spent: ", result[4])
-                  println("Function evaluations = ", sum(result[7]))
-                  println("Ierror = ", result[5])   
-               end
 
-               if result[5] > 0
+               if ierror > 0
                   push!(times1, Inf)
                   push!(iters1, Inf)
                   push!(avalf1, Inf)
                else
-                  iteration = size(result[6], 2)
-                  total_avals = sum(result[7])
+                  iteration = size(seqx, 2)
+                  total_avals = evalsf
                   push!(times1, elapsed_time)
                   push!(iters1, iteration)
                   push!(avalf1, total_avals)
@@ -94,26 +88,17 @@ for k in 1:nguess
                avalf = avalf1
                
             else
-               result = method2(x0, f, ∇f, ε, max_iter, GPA2)
+               (x, f(x), info, et, ierror, seqx, evalsf) = method2(x0, f, ∇f, ε, max_iter, GPA2)
                t1 = time()
                elapsed_time = t1 - t0
 
-               if result[5] > 0
-                  ENV["LINES"] = 30000
-                  println(result[3])
-                  println("Minimum value of f: ", result[2])
-                  println("Total time spent: ", result[4])
-                  println("Function evaluations = ", sum(result[7]))
-                  println("Ierror = ", result[5])
-               end
-
-               if result[5] > 0
+               if ierror > 0
                   push!(times2, Inf)
                   push!(iters2, Inf)
                   push!(avalf2, Inf)
                else
-                  iteration = size(result[6], 2)
-                  total_avals = sum(result[7])
+                  iteration = size(seqx, 2)
+                  total_avals = sum(evalsf)
                   push!(times2, elapsed_time)
                   push!(iters2, iteration)
                   push!(avalf2, total_avals)
@@ -121,7 +106,10 @@ for k in 1:nguess
                times = times2
                iters = iters2
                avalf = avalf2
+
             end
+            filename = "echo/" * string("guess", k) * string("set", feasible_set) * string("dim", dimension) * strategy * string("ierror", ierror) * ".jld2"
+            @save filename info
          end
       end
    end 
