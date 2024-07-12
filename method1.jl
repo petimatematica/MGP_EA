@@ -6,9 +6,17 @@ function GPA1(x, f, ∇f, projection, σ, min_step, γ_start, β_start)
     γ = γ_start
     j = 0
     zk = projection(x - β * ∇f(x))
+    
+    if x == x0
+        evalf = 1
+        else
+        evalf = 0
+    end
 
-    while true 
-     stptest = f(x + 2.0^(-j) * (zk - x)) - f(x) - σ * 2.0^(-j) * dot(∇f(x), zk - x)  
+    while true
+     evalf += 1 
+     x_plus = x + 2.0^(-j) * (zk - x)   
+     stptest = f(x_plus) - f(x) - σ * 2.0^(-j) * dot(∇f(x), zk - x) 
         
         if stptest > 0.0   
            j += 1 
@@ -28,28 +36,30 @@ function GPA1(x, f, ∇f, projection, σ, min_step, γ_start, β_start)
     if β < β1 || β > β2
        β = β / 2.0
     end
-    return (γ, β, ierror, j)
+    return (γ, β, ierror, evalf)
 end
 
-function method1(x0, f, ∇f, ε, max_iter, GPA1)
+function method1(x, f, ∇f, ε, max_iter, GPA1)
 
     fvals = Float64[]
     gradnorms = Float64[]
     stepsizes_β = Float64[]
     stepsizes_γ = Float64[]
-    avalf = Float64[]
+    evalf_γ = Float64[]
     iteration_time = Float64[]
     
     # Initialization
     ierror = 0
     iter = 0
-    x = x0
     seqx = x
     t0 = time()
 
     if norm(x - projection(x - ∇f(x))) < ε
-        #println("x0 is a stationary point!")
-        return (x, f(x))
+        info = 0
+        et = time() - t0
+        evalf_γ = 0
+        println("x0 is a stationary point!")
+        return (x, f(x), info, et, ierror, seqx, evalf_γ)
     end
 
     while true
@@ -58,21 +68,21 @@ function method1(x0, f, ∇f, ε, max_iter, GPA1)
         ∇fx = ∇f(x)
         fx = f(x) 
         gradnorm = norm(∇fx)
-        newsteps = GPA1(x, f, ∇f, projection, σ, min_step, γ_start, β_start)
+        (γ, β, ierror, evalf) = GPA1(x, f, ∇f, projection, σ, min_step, γ_start, β_start)
         
         if ierror == 1
             break
         end 
 
-        z = projection(x - newsteps[2] * ∇f(x)) 
-        x = x + newsteps[1] * (z - x)
+        z = projection(x - β * ∇f(x)) 
+        x = x + γ * (z - x)
         seqx = [seqx x] 
         it = time() - it0
         
         push!(iteration_time, it)
-        push!(stepsizes_β, newsteps[2])
-        push!(stepsizes_γ, newsteps[1])
-        push!(avalf, newsteps[4])
+        push!(stepsizes_β, β)
+        push!(stepsizes_γ, γ)
+        push!(evalf_γ, evalf)
         push!(fvals, fx) 
         push!(gradnorms, gradnorm)
         
@@ -92,7 +102,7 @@ function method1(x0, f, ∇f, ε, max_iter, GPA1)
             break
         end
     end
-    info = DataFrame(fvals = fvals, gradnorms = gradnorms, stepsizes_β = stepsizes_β, stepsizes_γ = stepsizes_γ, avalf_γ = avalf, iteration_time = iteration_time)
+    info = DataFrame(fvals = fvals, gradnorms = gradnorms, stepsizes_β = stepsizes_β, stepsizes_γ = stepsizes_γ, evalf_γ = evalf_γ, iteration_time = iteration_time)
     et = time() - t0
-    return (x, f(x), info, et, ierror, seqx, avalf)
+    return (x, f(x), info, et, ierror, seqx, sum(evalf_γ))
 end
