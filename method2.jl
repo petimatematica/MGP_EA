@@ -4,8 +4,15 @@ function GPA2(x, f, ∇f, projection, σ, min_step, β_start)
     ierror = 0
     β = β_start
     j = 0
+
+    if x == x0
+        evalf = 1
+        else
+        evalf = 0
+    end
  
     while true
+     evalf += 1   
      zkj = projection(x - β * 2.0^(-j) * ∇f(x)) 
      stptest = f(zkj) - f(x) + σ * dot(∇f(x), x - zkj) 
  
@@ -21,7 +28,7 @@ function GPA2(x, f, ∇f, projection, σ, min_step, β_start)
             break
         end
     end 
-    return (β, ierror, j)
+    return (β, ierror, evalf)
 end
 
 function method2(x0, f, ∇f, ε, max_iter, GPA2)
@@ -30,7 +37,7 @@ function method2(x0, f, ∇f, ε, max_iter, GPA2)
     gradnorms = Float64[]
     stepsizes_β = Float64[]
     stepsizes_γ = Float64[]
-    avalf = Float64[]
+    evalf_β = Float64[]
     iteration_time = Float64[]
     
     # Initialization
@@ -41,8 +48,11 @@ function method2(x0, f, ∇f, ε, max_iter, GPA2)
     t0 = time()
 
     if norm(x - projection(x - ∇f(x))) < ε
-        #println("x0 is a stationary point!")
-        return (x, f(x))
+        info = 0
+        et = time() - t0
+        evalf_γ = 0
+        println("x0 is a stationary point!")
+        return (x, f(x), info, et, ierror, seqx, evalf_γ)
     end
     
     while true
@@ -51,21 +61,21 @@ function method2(x0, f, ∇f, ε, max_iter, GPA2)
         ∇fx = ∇f(x) 
         fx = f(x)
         gradnorm = norm(∇fx)
-        newstep = GPA2(x, f, ∇f, projection, σ, min_step, β_start)
+        (β, ierror, evalf) = GPA2(x, f, ∇f, projection, σ, min_step, β_start)
 
         if ierror == 1
             break
         end  
 
-        x = projection(x - newstep[1] * ∇fx)
+        x = projection(x - β * ∇fx)
         seqx = [seqx x]
         it = time() - it0
         push!(fvals, fx)
         push!(gradnorms, gradnorm)
         push!(iteration_time, it)
         push!(stepsizes_γ, 1.0)
-        push!(stepsizes_β, newstep[1]) 
-        push!(avalf, newstep[3])
+        push!(stepsizes_β, β) 
+        push!(evalf_β, evalf)
         
         # First stopping condition
         if norm(x - xk) < ε
@@ -84,7 +94,7 @@ function method2(x0, f, ∇f, ε, max_iter, GPA2)
         end   
     end
 
-    info = DataFrame(fvals = fvals, gradnorms = gradnorms, stepsizes_β = stepsizes_β, avalf_β = avalf, stepsizes_γ = stepsizes_γ, iteration_time = iteration_time)
+    info = DataFrame(fvals = fvals, gradnorms = gradnorms, stepsizes_β = stepsizes_β, evalf_β = evalf_β, stepsizes_γ = stepsizes_γ, iteration_time = iteration_time)
     et = time() - t0
-    return (x, f(x), info, et, ierror, seqx, avalf)
+    return (x, f(x), info, et, ierror, seqx, sum(evalf_β))
 end
