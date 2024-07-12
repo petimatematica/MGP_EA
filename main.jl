@@ -9,8 +9,8 @@ using LinearAlgebra, DataFrames, Random
 
 # Parameters #
 guess = MersenneTwister(1234)
-x = rand(guess, 50)
-n = length(x) 
+x_rand = rand(guess, 2)
+n = length(x_rand) 
 σ = 1.e-4 
 ε = 1.e-5 
 β_start = 1.0
@@ -19,8 +19,8 @@ n = length(x)
 γ_start = 1.0
 min_step = 1.e-5
 max_iter = 30000
-strategy = "GPA2"
-feasible_set = 6
+strategy = "GPA1"
+feasible_set = 1
 
 # Conditions #
 
@@ -38,21 +38,19 @@ if feasible_set == 1
    projection = projection6
 end
 
-x0 = projection(x)
+x0 = projection(x_rand)
 
 if strategy == "GPA1"
-   result = method1(x0, f, ∇f, ε, max_iter, GPA1)
+   (x, f(x), info, et, ierror, seqx, evalsf) = method1(x0, f, ∇f, ε, max_iter, GPA1)
    elseif strategy == "GPA2"
-   result = method2(x0, f, ∇f, ε, max_iter, GPA2)
-   elseif strategy == "GPA3"
-   result = method3(x0, f, ∇f, ε, max_iter, min_step) 
+   (x, f(x), info, et, ierror, seqx, evalsf) = method2(x0, f, ∇f, ε, max_iter, GPA2) 
 end
 
 # Show the result #
 
 ENV["LINES"] = 1000
-println(result[3])
-println("Minimum value of f: ", result[2])
-println("Total time spent: ", result[4])
-println("Function evaluations = ", sum(result[7]))
-println("Ierror = ", result[5])
+println(info)
+println("Minimum value of f: ", f(x))
+println("Total time spent: ", et)
+println("Function evaluations = ", evalsf)
+println("Ierror = ", ierror)
