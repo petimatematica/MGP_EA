@@ -37,40 +37,50 @@ avalf2 = Float64[]
 t_inicial = time()
 
 for k in 1:nguess
-   for feasible_set in feasible_sets 
-      for dimension in dimensions
+   for dimension in dimensions
+      for feasible_set in feasible_sets
+         #global n
+         x_start = rand(guess, dimension)
+         n = length(x_start)
+         
+         if feasible_set == 1
+            projection = projection1
+            elseif feasible_set == 2
+            projection = projection2
+            elseif feasible_set == 3
+            projection = projection3
+            elseif feasible_set == 4
+            projection = projection4
+            elseif feasible_set == 5
+            projection = projection5
+            elseif feasible_set == 6
+            projection = projection6
+         end
+
+         x0 = projection(x_start)
+
+         global projection
+         global x0
+         global f
          global n
-         x = rand(guess, dimension)
-         n = length(x)
 
          for strategy in strategies
          
             t0 = time()
-            global projection
-            global f
-            global x0
 
-            if feasible_set == 1
-               projection = projection1
-               elseif feasible_set == 2
-               projection = projection2
-               elseif feasible_set == 3
-               projection = projection3
-               elseif feasible_set == 4
-               projection = projection4
-               elseif feasible_set == 5
-               projection = projection5
-               elseif feasible_set == 6
-               projection = projection6
-            end
-
-            x0 = projection(x)
             println("Running test with: feasible set = $feasible_set, strategy = $strategy, dimension = $dimension")
 
             if strategy == "GPA1"
                (x, f(x), info, et, ierror, seqx, evalsf) = method1(x0, f, ∇f, ε, max_iter, GPA1)
                t1 = time()
                elapsed_time = t1 - t0
+
+               # ENV["LINES"] = 10000
+               # println(info)
+               # println("Minimum value of f: ", f(x))
+               # println("Total time spent: ", et)
+               # println("Function evaluations = ", evalsf)
+               # println("Ierror = ", ierror)
 
                if ierror > 0
                   push!(times1, Inf)
@@ -91,6 +101,13 @@ for k in 1:nguess
                (x, f(x), info, et, ierror, seqx, evalsf) = method2(x0, f, ∇f, ε, max_iter, GPA2)
                t1 = time()
                elapsed_time = t1 - t0
+
+               # ENV["LINES"] = 10000
+               # println(info)
+               # println("Minimum value of f: ", f(x))
+               # println("Total time spent: ", et)
+               # println("Function evaluations = ", evalsf)
+               # println("Ierror = ", ierror)
 
                if ierror > 0
                   push!(times2, Inf)
