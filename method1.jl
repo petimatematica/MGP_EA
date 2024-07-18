@@ -39,7 +39,7 @@ function GPA1(x, f, ∇f, projection, σ, min_step, γ_start, β_start)
     return (γ, β, ierror, evalf)
 end
 
-function method1(x, f, ∇f, ε, max_iter, GPA1)
+function method1(x, f, ∇f, ε, max_iter, GPA1, projection)
 
     fvals = Float64[]
     gradnorms = Float64[]
@@ -56,7 +56,7 @@ function method1(x, f, ∇f, ε, max_iter, GPA1)
 
     if norm(x - projection(x - ∇f(x))) < ε
         info = 0
-        et = time() - t0
+        et = time - t0
         evalf_γ = 0
         println("x0 is a stationary point!")
         return (x, f(x), info, et, ierror, seqx, evalf_γ)
