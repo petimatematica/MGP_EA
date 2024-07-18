@@ -5,14 +5,14 @@
 ## Projection 01: Ball of ray δ and center y ##
 
 function projection1(x)
+    n = length(x)
     y = fill(0, n) 
     δ = 0.5 
     norm_yx = norm(y-x)
     if norm_yx <= δ
         return x
     else
-        projection = y - (δ*(y-x)/norm_yx)
-        return projection
+        return y - (δ*(y-x)/norm_yx)
     end
 end
 
@@ -28,17 +28,16 @@ function projection3(x)
     n = length(x)
     a = fill(-1, n)
     b = fill(1, n)
-    projection = similar(x)
     for j in 1:n   
         if x[j] < a[j]
-           projection[j] = a[j]
+           x[j] = a[j]
         elseif a[j] <= x[j] <= b[j]
-           projection[j] = x[j]
+           x[j] = x[j]
         elseif x[j] > b[j]
-            projection[j] = b[j] 
+           x[j] = b[j] 
         end
     end
-    return projection
+    return x
 end
 
 ## Projection 04: C is the set of points that stisfy an equality with inner product ##
@@ -47,8 +46,7 @@ function projection4(x)
     n = length(x)
     a = fill(1, n)
     b = 0
-    projection = x + ((b - dot(a, x))/norm(a)^2)*a
-    return projection
+    return x + ((b - dot(a, x))/norm(a)^2)*a
 end
 
 ## Projection 05: C is the set of points that stisfy an equality with inner product ##
@@ -57,8 +55,7 @@ function projection5(x)
     n = length(x)
     a = fill(1, n)
     b = 0
-    projection = x + ((min(0, b - dot(a, x)))/norm(a)^2)*a
-    return projection
+    return x + ((min(0, b - dot(a, x)))/norm(a)^2)*a
 end
 
 ## Projection 06: C is the set of points that satisfy an equality with a product between a vector and a matrix with defined rank ##
@@ -77,11 +74,10 @@ function projection6(x)
     rank = 2  
     A = matrix(rank, n)
     b = fill(0, size(A, 1))
-    projection = x - A' * inv(A * A') * (A * x - b)
-    return projection
+    return x - A' * inv(A * A') * (A * x - b)
 end
 
 ## Test ##
 
-# y = [0.5, 2, 3, 1];
+# y = [100, -222, 3, 111];
 # println("Projeção de x em C: ", projection6(y))
