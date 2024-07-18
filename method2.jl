@@ -31,7 +31,7 @@ function GPA2(x, f, ∇f, projection, σ, min_step, β_start)
     return (β, ierror, evalf)
 end
 
-function method2(x0, f, ∇f, ε, max_iter, GPA2)
+function method2(x0, f, ∇f, ε, max_iter, GPA2, projection)
 
     fvals = Float64[]
     gradnorms = Float64[]
