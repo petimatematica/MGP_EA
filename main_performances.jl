@@ -20,11 +20,11 @@ max_iter = 50000
 
 ## Analysis of time, number of iterations and number of function evaluations ##
 
-projections = [projection1, projection2]
+projections = [projection1, projection2, projection3, projection4, projection5, projection6]
 strategies = ["GPA1", "GPA2"]
-dimensions = [5, 10]
-guess = MersenneTwister(1234)
-nguess = 2
+dimensions = [5, 10, 30, 50, 100, 150, 200, 300, 400, 500]
+guess = MersenneTwister(123456)
+nguess = 5
 
 times1 = Float64[] 
 times2 = Float64[] 
@@ -90,7 +90,7 @@ for k in 1:nguess
                evalf = evalf2
 
             end
-            filename = "echo/" * string("guess", k) * string("set", feasible_set) * string("dim", dimension) * strategy * string("ierror", ierror) * ".jld2"
+            filename = "echo/" * string("guess", k) * string(projection) * string("dim", dimension) * strategy * string("ierror", ierror) * ".jld2"
             @save filename info
          end
       end

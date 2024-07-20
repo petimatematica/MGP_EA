@@ -5,7 +5,7 @@ include("projections.jl")
 include("method1.jl")
 include("method2.jl")
 
-using LinearAlgebra, DataFrames, Random
+using LinearAlgebra, DataFrames, Random, JLD2
 
 # Parameters #
 guess = MersenneTwister(1234)
@@ -20,30 +20,16 @@ n = length(x_rand)
 min_step = 1.e-5
 max_iter = 30000
 strategy = "GPA1"
-feasible_set = 1
+projection = projection1
 
 # Conditions #
-
-if feasible_set == 1
-   projection = projection1
-   elseif feasible_set == 2
-   projection = projection2
-   elseif feasible_set == 3
-   projection = projection3
-   elseif feasible_set == 4
-   projection = projection4
-   elseif feasible_set == 5
-   projection = projection5
-   elseif feasible_set == 6
-   projection = projection6
-end
 
 x0 = projection(x_rand)
 
 if strategy == "GPA1"
-   (x, f(x), info, et, ierror, seqx, evalsf) = method1(x0, f, ∇f, ε, max_iter, GPA1)
+   (x, f(x), info, et, ierror, seqx, evalsf) = method1(x0, f, ∇f, ε, max_iter, GPA1, projection)
    elseif strategy == "GPA2"
-   (x, f(x), info, et, ierror, seqx, evalsf) = method2(x0, f, ∇f, ε, max_iter, GPA2) 
+   (x, f(x), info, et, ierror, seqx, evalsf) = method2(x0, f, ∇f, ε, max_iter, GPA2, projection) 
 end
 
 # Show the result #

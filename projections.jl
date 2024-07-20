@@ -6,13 +6,13 @@
 
 function projection1(x)
     n = length(x)
-    y = fill(0, n) 
+    c = fill(0, n) 
     δ = 0.5 
-    norm_yx = norm(y-x)
-    if norm_yx <= δ
+    cx = norm(c-x)
+    if cx <= δ
         return x
     else
-        return y - (δ*(y-x)/norm_yx)
+        return c - (δ*(c-x)/cx)
     end
 end
 
@@ -53,7 +53,7 @@ end
 
 function projection5(x)
     n = length(x)
-    a = fill(1, n)
+    a = fill(-1, n)
     b = 0
     return x + ((min(0, b - dot(a, x)))/norm(a)^2)*a
 end
@@ -79,5 +79,5 @@ end
 
 ## Test ##
 
-# y = [100, -222, 3, 111];
+# y = [1, 2, -10, 1];
 # println("Projeção de x em C: ", projection6(y))
