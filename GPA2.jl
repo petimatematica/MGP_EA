@@ -20,6 +20,7 @@ function GPA2(x, f, ∇f, projection, σ, min_step, β_start)
          j += 1 
         else
             β = β_start * 2.0^(-j)
+            #println(β)
             if β < min_step
                ierror = 1
                println("Step length too small!")
@@ -36,7 +37,6 @@ function method2(x0, f, ∇f, ε, max_iter, GPA2, projection)
     fvals = Float64[]
     gradnorms = Float64[]
     stepsizes_β = Float64[]
-    stepsizes_γ = Float64[]
     evalf_β = Float64[]
     iteration_time = Float64[]
     
@@ -73,7 +73,6 @@ function method2(x0, f, ∇f, ε, max_iter, GPA2, projection)
         push!(fvals, fx)
         push!(gradnorms, gradnorm)
         push!(iteration_time, it)
-        push!(stepsizes_γ, 1.0)
         push!(stepsizes_β, β) 
         push!(evalf_β, evalf)
         
@@ -94,7 +93,7 @@ function method2(x0, f, ∇f, ε, max_iter, GPA2, projection)
         end   
     end
 
-    info = DataFrame(fvals = fvals, gradnorms = gradnorms, stepsizes_β = stepsizes_β, evalf_β = evalf_β, stepsizes_γ = stepsizes_γ, iteration_time = iteration_time)
+    info = DataFrame(fvals = fvals, gradnorms = gradnorms, stepsizes_β = stepsizes_β, evalf_β = evalf_β, iteration_time = iteration_time)
     et = time() - t0
     return (x, f(x), info, et, ierror, seqx, sum(evalf_β))
 end

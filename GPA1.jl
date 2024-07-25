@@ -32,9 +32,10 @@ function GPA1(x, f, ∇f, projection, σ, min_step, γ_start, β_start)
     end
     
     β = (-dot(zk - x, ∇f(x)) * β^2) / (2.0 * (f(x + β * (zk - x)) - f(x) - β * dot(zk - x, ∇f(x))))
-    
-    if β < β1 || β > β2
-       β = β / 2.0
+    if β < β1
+       β = β1
+       elseif β > β2
+       β = β2
     end
     return (γ, β, ierror, evalf)
 end
@@ -89,7 +90,7 @@ function method1(x, f, ∇f, ε, max_iter, GPA1, projection)
         # First stopping condition
         if norm(x - xk) < ε
            println("The solution has found!")
-            break
+           break
         end
 
         # Update iteration
