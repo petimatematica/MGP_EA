@@ -1,8 +1,8 @@
 ## Projected Gradient Method with GPA1 ##
 
-function GPA1(x, f, ∇f, projection, σ, min_step, γ_start, β_start)
+function GPA1(x, f, ∇f, projection, σ, min_step, γ_start, β2)
     ierror = 0
-    β = β_start
+    β = β2
     γ = γ_start
     j = 0
     zk = projection(x - β * ∇f(x))
@@ -77,6 +77,7 @@ function method1(x, f, ∇f, ε, max_iter, GPA1, projection)
 
         z = projection(x - β * ∇f(x)) 
         x = x + γ * (z - x)
+        #println(x)
         seqx = [seqx x] 
         it = time() - it0
         

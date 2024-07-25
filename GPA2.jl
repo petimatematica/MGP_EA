@@ -68,6 +68,7 @@ function method2(x0, f, ∇f, ε, max_iter, GPA2, projection)
         end  
 
         x = projection(x - β * ∇fx)
+        #println(x)
         seqx = [seqx x]
         it = time() - it0
         push!(fvals, fx)

@@ -55,8 +55,8 @@ end
 
 function projection3(x)
    n = length(x)
-   a = fill(-1, n)
-   b = fill(1, n)
+   a = fill(-100, n)
+   b = fill(50, n)
    for j in 1:n   
        if x[j] < a[j]
           x[j] = a[j]
@@ -108,8 +108,8 @@ end
 
 # Parameters #
 
-guess = MersenneTwister(12345)
-x_rand = rand(guess, 500)
+guess = MersenneTwister(1234)
+x_rand = rand(guess, 1000)
 n = length(x_rand) 
 σ = 1.e-4 
 ε = 1.e-5 
@@ -120,11 +120,12 @@ n = length(x_rand)
 min_step = 1.e-5
 max_iter = 50000
 strategy = "GPA1"
-projection = projection6
+projection = projection1
 
 # Definitions #
 
 x0 = projection(x_rand)
+#println("x0 = ", x0)
 
 if strategy == "GPA1"
    (x, f(x), info, et, ierror, seqx, evalsf) = method1(x0, f, ∇f, ε, max_iter, GPA1, projection)
