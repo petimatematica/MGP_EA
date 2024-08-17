@@ -82,7 +82,7 @@ end
 
 function projection5(x)
    n = length(x)
-   a = fill(-1, n)
+   a = fill(1, n)
    b = 0
    return x + ((min(0, b - dot(a, x)))/norm(a)^2)*a
 end
@@ -115,15 +115,15 @@ end
 β2 = 0.9
 γ_start = 1.0
 min_step = 1.e-5
-max_iter = 50000
+max_iter = 40000
 
 ## Analysis of time, number of iterations and number of function evaluations ##
 
-projections = [projection2]
-#, projection2, projection3, projection4, projection5, projection6]
+projections = [projection1, projection2, projection3, projection5]
+#, projection4, projection5, projection6]
 strategies = ["GPA1", "GPA2"]
-dimensions = [500]
-guess = MersenneTwister(123456)
+dimensions = [5, 10, 30, 50, 100, 150, 200, 300, 400, 500]
+guess = MersenneTwister(1234)
 nguess = 2
 
 times1 = Float64[] 
@@ -154,12 +154,12 @@ for k in 1:nguess
                t1 = time()
                elapsed_time = t1 - t0
 
-               ENV["LINES"] = 10000
-               println(info)
-               println("Minimum value of f: ", f(x))
-               println("Total time spent: ", et)
-               println("Function evaluations = ", evalsf)
-               println("Ierror = ", ierror)
+               # ENV["LINES"] = 10000
+               # println(info)
+               # println("Minimum value of f: ", f(x))
+               # println("Total time spent: ", et)
+               # println("Function evaluations = ", evalsf)
+               # println("Ierror = ", ierror)
 
                if ierror > 0
                   push!(times1, Inf)
@@ -205,8 +205,8 @@ for k in 1:nguess
 
             end
 
-            # filename = "echo/" * string("guess", k) * string(projection) * string("dim", dimension) * strategy * string("ierror", ierror) * ".jld2"
-            # @save filename info
+            filename = "echo/" * string("guess", k) * string(projection) * string("dim", dimension) * strategy * string("ierror", ierror) * string("min", f(x)) * ".jld2"
+            @save filename info
 
          end
       end
@@ -219,31 +219,31 @@ problems = length(projections) * length(dimensions) * nguess
 println("Number of problems: ", problems)
 println("Problems tested, generating performance profiles...")
 
-## Performance profiles ##
+# Performance profiles ##
 
-# X = [times1 times2]; 
-# Y = [iters1 iters2]; 
-# Z = [evalf1 evalf2]; 
+X = [times1 times2]; 
+Y = [iters1 iters2]; 
+Z = [evalf1 evalf2]; 
 
-# colors=[:blue2, :green2]
+colors=[:blue2, :green2]
 
-# P1 = performance_profile(PlotsBackend(), X, ["GPA1", "GPA2"], 
-# xlabel = "CPU time ratio", ylabel = "Solved problems [%]", legend = :bottomright, 
-# palette = colors, linewidth = 1.5, dpi = 1000)
+P1 = performance_profile(PlotsBackend(), X, ["GPA1", "GPA2"], 
+xlabel = "CPU time ratio", ylabel = "Solved problems [%]", legend = :bottomright, 
+palette = colors, linewidth = 1.5, dpi = 1000)
 
-# P2 = performance_profile(PlotsBackend(), Y, ["GPA1", "GPA2"], 
-# xlabel = "Iteration", ylabel = "Solved problems [%]", legend = :bottomright, 
-# palette = colors, linewidth = 1.5, dpi = 1000)
+P2 = performance_profile(PlotsBackend(), Y, ["GPA1", "GPA2"], 
+xlabel = "Iteration", ylabel = "Solved problems [%]", legend = :bottomright, 
+palette = colors, linewidth = 1.5, dpi = 1000)
 
-# P3 = performance_profile(PlotsBackend(), Z, ["GPA1", "GPA2"], 
-# xlabel = "Function evaluations", ylabel = "Solved problems [%]", legend = :bottomright, 
-# palette = colors, linewidth = 1.5
-# , dpi = 1000)
+P3 = performance_profile(PlotsBackend(), Z, ["GPA1", "GPA2"], 
+xlabel = "Function evaluations", ylabel = "Solved problems [%]", legend = :bottomright, 
+palette = colors, linewidth = 1.5
+, dpi = 1000)
 
-# println("Performance profiles generated, saving figures...")
+println("Performance profiles generated, saving figures...")
 
-# savefig(P1, "performance_profile_CPU_time_ratio.png")
-# savefig(P2, "performance_profile_iteration.png")
-# savefig(P3, "performance_profile_function_evaluations.png")
+savefig(P1, "performance_profile_CPU_time_ratio.png")
+savefig(P2, "performance_profile_iteration.png")
+savefig(P3, "performance_profile_function_evaluations.png")
 
 println("Figures saved, the code has finished running.")

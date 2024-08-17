@@ -4,16 +4,18 @@ function GPA2(x, f, ∇f, projection, σ, min_step, β_start)
     ierror = 0
     β = β_start
     j = 0
-
+    
     if x == x0
         evalf = 1
         else
         evalf = 0
     end
- 
+    
+    zkj = 0
+
     while true
-     evalf += 1   
-     zkj = projection(x - β * 2.0^(-j) * ∇f(x)) 
+     evalf += 1 
+     zkj = projection(x - β * 2.0^(-j) * ∇f(x))
      stptest = f(zkj) - f(x) + σ * dot(∇f(x), x - zkj) 
  
         if stptest > 0.0 
@@ -29,10 +31,10 @@ function GPA2(x, f, ∇f, projection, σ, min_step, β_start)
             break
         end
     end 
-    return (β, ierror, evalf)
+    return (β, zkj, ierror, evalf)
 end
 
-function method2(x0, f, ∇f, ε, max_iter, GPA2, projection)
+function method2(x, f, ∇f, ε, max_iter, GPA2, projection)
 
     fvals = Float64[]
     gradnorms = Float64[]
@@ -43,16 +45,15 @@ function method2(x0, f, ∇f, ε, max_iter, GPA2, projection)
     # Initialization
     ierror = 0
     iter = 0
-    x = x0
     seqx = x
     t0 = time()
 
     if norm(x - projection(x - ∇f(x))) < ε
         info = 0
         et = time() - t0
-        evalf_γ = 0
+        evalf_β = 0
         println("x0 is a stationary point!")
-        return (x, f(x), info, et, ierror, seqx, evalf_γ)
+        return (x, f(x), info, et, ierror, seqx, evalf_β)
     end
     
     while true
@@ -61,14 +62,14 @@ function method2(x0, f, ∇f, ε, max_iter, GPA2, projection)
         ∇fx = ∇f(x) 
         fx = f(x)
         gradnorm = norm(∇fx)
-        (β, ierror, evalf) = GPA2(x, f, ∇f, projection, σ, min_step, β_start)
+        (β, zkj, ierror, evalf) = GPA2(x, f, ∇f, projection, σ, min_step, β_start)
 
         if ierror == 1
             break
         end  
 
-        x = projection(x - β * ∇fx)
-        #println(x)
+        x = zkj
+        #println("x =", x)
         seqx = [seqx x]
         it = time() - it0
         push!(fvals, fx)
@@ -76,6 +77,8 @@ function method2(x0, f, ∇f, ε, max_iter, GPA2, projection)
         push!(iteration_time, it)
         push!(stepsizes_β, β) 
         push!(evalf_β, evalf)
+
+        #println("Critério de parada -> ", norm(x - xk))
         
         # First stopping condition
         if norm(x - xk) < ε

@@ -1,11 +1,9 @@
 ## Projected Gradient Method with GPA1 ##
 
-function GPA1(x, f, ∇f, projection, σ, min_step, γ_start, β2)
+function GPA1(x, f, ∇f, σ, min_step, γ_start, zk)
     ierror = 0
-    β = β2
     γ = γ_start
     j = 0
-    zk = projection(x - β * ∇f(x))
     
     if x == x0
         evalf = 1
@@ -31,13 +29,7 @@ function GPA1(x, f, ∇f, projection, σ, min_step, γ_start, β2)
         end       
     end
     
-    β = (-dot(zk - x, ∇f(x)) * β^2) / (2.0 * (f(x + β * (zk - x)) - f(x) - β * dot(zk - x, ∇f(x))))
-    if β < β1
-       β = β1
-       elseif β > β2
-       β = β2
-    end
-    return (γ, β, ierror, evalf)
+    return (γ, ierror, evalf)
 end
 
 function method1(x, f, ∇f, ε, max_iter, GPA1, projection)
@@ -54,10 +46,11 @@ function method1(x, f, ∇f, ε, max_iter, GPA1, projection)
     iter = 0
     seqx = x
     t0 = time()
+    β = β2
 
     if norm(x - projection(x - ∇f(x))) < ε
         info = 0
-        et = time - t0
+        et = time() - t0
         evalf_γ = 0
         println("x0 is a stationary point!")
         return (x, f(x), info, et, ierror, seqx, evalf_γ)
@@ -67,17 +60,26 @@ function method1(x, f, ∇f, ε, max_iter, GPA1, projection)
         xk = copy(x)
         it0 = time()
         ∇fx = ∇f(x)
-        fx = f(x) 
         gradnorm = norm(∇fx)
-        (γ, β, ierror, evalf) = GPA1(x, f, ∇f, projection, σ, min_step, γ_start, β_start)
+
+        zk = projection(x - β * ∇f(x))
+
+        β = (-dot(zk - x, ∇f(x)) * β^2) / (2.0 * (f(x + β * (zk - x)) - f(x) - β * dot(zk - x, ∇f(x))))
+        
+        if β < β1
+        β = β1
+        elseif β > β2
+        β = β2
+        end
+
+        (γ, ierror, evalf) = GPA1(x, f, ∇f, σ, min_step, γ_start, zk)
         
         if ierror == 1
             break
         end 
 
-        z = projection(x - β * ∇f(x)) 
-        x = x + γ * (z - x)
-        #println(x)
+        x = x + γ * (zk - x)
+        #println("x = ", x)
         seqx = [seqx x] 
         it = time() - it0
         
@@ -85,7 +87,7 @@ function method1(x, f, ∇f, ε, max_iter, GPA1, projection)
         push!(stepsizes_β, β)
         push!(stepsizes_γ, γ)
         push!(evalf_γ, evalf)
-        push!(fvals, fx) 
+        push!(fvals, f(x)) 
         push!(gradnorms, gradnorm)
         
         # First stopping condition

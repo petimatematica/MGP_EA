@@ -55,8 +55,8 @@ end
 
 function projection3(x)
    n = length(x)
-   a = fill(-100, n)
-   b = fill(50, n)
+   a = fill(-5, n)
+   b = fill(5, n)
    for j in 1:n   
        if x[j] < a[j]
           x[j] = a[j]
@@ -69,7 +69,7 @@ function projection3(x)
    return x
 end
 
-# Projection 04: C is the set of points that stisfy an equality with inner product #
+# Projection 04: C is the set of points that satisfy an equality with inner product #
 
 function projection4(x)
    n = length(x)
@@ -78,7 +78,7 @@ function projection4(x)
    return x + ((b - dot(a, x))/norm(a)^2)*a
 end
 
-# Projection 05: C is the set of points that stisfy an equality with inner product #
+# Projection 05: C is the set of points that satisfy an inequality with inner product #
 
 function projection5(x)
    n = length(x)
@@ -108,18 +108,18 @@ end
 
 # Parameters #
 
-guess = MersenneTwister(1234)
-x_rand = rand(guess, 1000)
+guess = MersenneTwister(123456)
+x_rand = rand(guess, 10)
 n = length(x_rand) 
 σ = 1.e-4 
-ε = 1.e-5 
+ε = 1.e-7 
 β_start = 1.0
 β1 = 0.01
 β2 = 0.9
 γ_start = 1.0
 min_step = 1.e-5
-max_iter = 50000
-strategy = "GPA1"
+max_iter = 30000
+strategy = "GPA2"
 projection = projection1
 
 # Definitions #
@@ -137,6 +137,7 @@ end
 
 ENV["LINES"] = 10000
 println(info)
+println("Minimizador: ", x)
 println("Minimum value of f: ", f(x))
 println("Total time spent: ", et)
 println("Function evaluations = ", evalsf)
