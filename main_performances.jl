@@ -48,15 +48,15 @@ end
 # Projection 02: C is R^n+ #
 
 function projection2(x)
-   return max.(0, x)
+   return max.(5, x)
 end
 
 # Projection 03: C is a hypercube of dimension n. For each dimension, the range is [-1,1] #
 
 function projection3(x)
    n = length(x)
-   a = fill(-1, n)
-   b = fill(1, n)
+   a = fill(10, n)
+   b = fill(50, n)
    for j in 1:n   
        if x[j] < a[j]
           x[j] = a[j]
@@ -119,12 +119,12 @@ max_iter = 40000
 
 ## Analysis of time, number of iterations and number of function evaluations ##
 
-projections = [projection1, projection2, projection3, projection5]
+projections = [projection1, projection3, projection4, projection5, projection6]
 #, projection4, projection5, projection6]
 strategies = ["GPA1", "GPA2"]
 dimensions = [5, 10, 30, 50, 100, 150, 200, 300, 400, 500]
 guess = MersenneTwister(1234)
-nguess = 2
+nguess = 5
 
 times1 = Float64[] 
 times2 = Float64[] 
@@ -181,12 +181,12 @@ for k in 1:nguess
                t1 = time()
                elapsed_time = t1 - t0
 
-               ENV["LINES"] = 1000
-               println(info)
-               println("Minimum value of f: ", f(x))
-               println("Total time spent: ", et)
-               println("Function evaluations = ", evalsf)
-               println("Ierror = ", ierror)
+               # ENV["LINES"] = 1000
+               # println(info)
+               # println("Minimum value of f: ", f(x))
+               # println("Total time spent: ", et)
+               # println("Function evaluations = ", evalsf)
+               # println("Ierror = ", ierror)
 
                if ierror > 0
                   push!(times2, Inf)
@@ -219,7 +219,7 @@ problems = length(projections) * length(dimensions) * nguess
 println("Number of problems: ", problems)
 println("Problems tested, generating performance profiles...")
 
-# Performance profiles ##
+## Performance profiles ##
 
 X = [times1 times2]; 
 Y = [iters1 iters2]; 

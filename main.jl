@@ -48,7 +48,7 @@ end
 # Projection 02: C is R^n+ #
 
 function projection2(x)
-   return max.(0, x)
+   return max.(5, x)
 end
 
 # Projection 03: C is a hypercube of dimension n. For each dimension, the range is [-1,1] #
@@ -109,7 +109,7 @@ end
 # Parameters #
 
 guess = MersenneTwister(123456)
-x_rand = rand(guess, 10)
+x_rand = rand(guess, 2)
 n = length(x_rand) 
 σ = 1.e-4 
 ε = 1.e-7 
@@ -120,7 +120,7 @@ n = length(x_rand)
 min_step = 1.e-5
 max_iter = 30000
 strategy = "GPA2"
-projection = projection1
+projection = projection2
 
 # Definitions #
 
