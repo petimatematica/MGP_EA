@@ -20,7 +20,6 @@ function GPA1(x, f, ∇f, σ, min_step, γ_start, zk)
            j += 1 
         else
            γ = 2.0^(-j)
-           #println("γ = ", γ)
             if γ < min_step
                ierror = 1
                println("Step length too small!")
@@ -50,9 +49,6 @@ function method1(x, f, ∇f, ε, max_iter, GPA1, projection)
     β = β2
 
     if norm(x - projection(x - ∇f(x))) < ε
-        # println("x = ", x)
-        # println("x - ∇f(x) = ", x - ∇f(x))
-        # println("projection(x - ∇f(x)) = ", projection(x - ∇f(x)))
         info = 0
         et = time() - t0
         evalf_γ = 0
@@ -83,7 +79,6 @@ function method1(x, f, ∇f, ε, max_iter, GPA1, projection)
         end 
 
         x = x + γ * (zk - x)
-        #println("x = ", x)
         seqx = [seqx x] 
         it = time() - it0
         

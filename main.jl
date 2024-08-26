@@ -35,8 +35,9 @@ end
 
 function projection1(x)
    n = length(x)
-   c = fill(0, n) 
-   δ = 0.5 
+   c = zeros(n) 
+   c[1] = -60
+   δ = 10 
    cx = norm(c-x)
    if cx <= δ
        return x
@@ -109,7 +110,7 @@ end
 # Parameters #
 
 guess = MersenneTwister(123456)
-x_rand = rand(guess, 2)
+x_rand = rand(guess, 300)
 n = length(x_rand) 
 σ = 1.e-4 
 ε = 1.e-7 
@@ -120,7 +121,7 @@ n = length(x_rand)
 min_step = 1.e-5
 max_iter = 30000
 strategy = "GPA2"
-projection = projection2
+projection = projection1
 
 # Definitions #
 
@@ -137,7 +138,7 @@ end
 
 ENV["LINES"] = 10000
 println(info)
-println("Minimizador: ", x)
+#println("Minimizador: ", x)
 println("Minimum value of f: ", f(x))
 println("Total time spent: ", et)
 println("Function evaluations = ", evalsf)

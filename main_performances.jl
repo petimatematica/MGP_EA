@@ -35,8 +35,9 @@ end
 
 function projection1(x)
    n = length(x)
-   c = fill(0, n) 
-   δ = 0.5 
+   c = zeros(n) 
+   c[1] = -50
+   δ = 20 
    cx = norm(c-x)
    if cx <= δ
        return x
@@ -55,8 +56,8 @@ end
 
 function projection3(x)
    n = length(x)
-   a = fill(10, n)
-   b = fill(50, n)
+   a = fill(-10, n)
+   b = fill(10, n)
    for j in 1:n   
        if x[j] < a[j]
           x[j] = a[j]
@@ -119,8 +120,7 @@ max_iter = 40000
 
 ## Analysis of time, number of iterations and number of function evaluations ##
 
-projections = [projection1, projection3, projection4, projection5, projection6]
-#, projection4, projection5, projection6]
+projections = [projection1, projection4, projection5, projection6]
 strategies = ["GPA1", "GPA2"]
 dimensions = [5, 10, 30, 50, 100, 150, 200, 300, 400, 500]
 guess = MersenneTwister(1234)

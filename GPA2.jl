@@ -22,7 +22,6 @@ function GPA2(x, f, ∇f, projection, σ, min_step, β_start)
          j += 1 
         else
             β = β_start * 2.0^(-j)
-            #println(β)
             if β < min_step
                ierror = 1
                println("Step length too small!")
@@ -69,7 +68,6 @@ function method2(x, f, ∇f, ε, max_iter, GPA2, projection)
         end  
 
         x = zkj
-        #println("x =", x)
         seqx = [seqx x]
         it = time() - it0
         push!(fvals, fx)
@@ -77,8 +75,6 @@ function method2(x, f, ∇f, ε, max_iter, GPA2, projection)
         push!(iteration_time, it)
         push!(stepsizes_β, β) 
         push!(evalf_β, evalf)
-
-        #println("Critério de parada -> ", norm(x - xk))
         
         # First stopping condition
         if norm(x - xk) < ε
