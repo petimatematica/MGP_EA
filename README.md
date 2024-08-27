@@ -92,3 +92,25 @@ Gradient Projected Method with Armijo linesearch along the projection arc.
 
 
 ## main.jl
+This Julia script performs a comprehensive test on the Dixon-Price function using the projected gradient method and generates a data frame with the data obtained during the optimization process.
+
+### Code overview
+The script is organized into the following sections:
+
+1. **Imports and Inclusions:** The script imports the necessary packages (`LinearALgebra`, `DataFrames` and `Random`) and includes the essential Julia files: `GPA1.jl` and `GPA2.jl`.
+
+2. **Dixon-Price function:**
+   - **$f$ (Function):** The Dixon-Price function
+   - **$\nabla f$ (Function):** The gradient of the Dixon-Price function
+
+3. **Projection functions for diferent feasible sets:**
+   - **projection1:** $C = \{x \in \mathbb{R}^n; |x-c| \le 20 \}$, onde $c = (-50,0,0,0,\ldots)$.
+   - **projection2:** $C = \{x \in \mathbb{R}^n ; \langle a, x \rangle = 0\}$, onde $a = (1,1,\cdots,1)$
+   - **projection3:** $C = \{x \in \mathbb{R}^n ; \langle a, x \rangle \le 0\}$, onde $a = (-1,-1,\cdots,-1)$
+   - **projection4:** $C = \{x \in \mathbb{R}^n ; Ax = (0,0)\}$, onde $A \in \mathbb{R}(2,n)$ tem posto $2$
+
+4. **Parameters:**
+Definition of all parameters to be used in the optimization process.
+
+6. **Optimization Cycle:**
+The script performs the gradient method optimization for the chosen case and show the informations at the end of process.
