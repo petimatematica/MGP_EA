@@ -8,7 +8,7 @@ Armijo linesearch along feasible directions.
 
 #### Arguments
 
-- **$\boldsymbol{x}$ (Vector):** Point where the linear search will be carried out
+- **$\boldsymbol{x}$ (Vector):** Point where the linear search will applied
 - **$f$ (Function):** The objective function
 - **$\nabla f$ (Function):** The gradient of the objective function
 - **$\sigma$ (FLoat64):** The parameter of Armijo linesearch
